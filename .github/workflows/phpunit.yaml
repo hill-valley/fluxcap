@@ -1,0 +1,32 @@
+name: phpunit
+
+on:
+    push:
+        branches:
+            - 1.x
+            - 2.x
+    pull_request:
+
+jobs:
+    phpunit:
+        strategy:
+            matrix:
+                php: ['7.4', '8.0']
+
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v2
+            -   name: Set up php
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php }}
+                    extensions: intl
+                    coverage: pcov
+            -   name: Install locale
+                run: sudo locale-gen de_DE.UTF-8
+            -   name: Install dependencies
+                uses: ramsey/composer-install@v1
+            -   name: Run phpunit
+                run: vendor/bin/phpunit --colors=always --coverage-text

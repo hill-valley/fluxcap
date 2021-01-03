@@ -1,0 +1,27 @@
+name: php-cs-fixer
+
+on:
+    push:
+        branches:
+            - 1.x
+            - 2.x
+    pull_request:
+
+jobs:
+    php-cs-fixer:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v2
+            -   name: Set up php
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '7.4'
+                    extensions: intl
+                    coverage: none
+                    tools: cs2pr
+            -   name: Install dependencies
+                uses: ramsey/composer-install@v1
+            -   name: Run php-cs-fixer
+                run: vendor/bin/php-cs-fixer fix --ansi --diff --dry-run --format=checkstyle | cs2pr
