@@ -7,6 +7,11 @@ This package contains:
 - immutable class `TimeZone` (wrapping `\DateTimeZone`)
 - immutable class `Duration` (wrapping `\DateInterval`)
 - enum-like classes `Month` and `Weekday`
+  
+[![Latest release](https://img.shields.io/github/v/release/hill-valley/fluxcap?sort=semver&style=flat-square)](https://github.com/hill-valley/fluxcap/releases)
+![PHP version requirement](https://img.shields.io/packagist/php-v/hill-valley/fluxcap?style=flat-square)
+[![Psalm type coverage](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fshepherd.dev%2Fgithub%2Fhill-valley%2Ffluxcap%2Fcoverage)](https://shepherd.dev/github/hill-valley/fluxcap)
+![License](https://img.shields.io/github/license/hill-valley/fluxcap?style=flat-square)
 
 Installation
 ------------
