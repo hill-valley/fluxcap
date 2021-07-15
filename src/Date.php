@@ -164,11 +164,6 @@ final class Date implements \JsonSerializable
         return $this->dateTime->format('Y-m-d');
     }
 
-    public function formatLocalized(string $format): string
-    {
-        return gmstrftime($format, $this->dateTime->getTimestamp());
-    }
-
     /**
      * @param \IntlDateFormatter::FULL|\IntlDateFormatter::LONG|\IntlDateFormatter::MEDIUM|\IntlDateFormatter::SHORT|\IntlDateFormatter::NONE|null $format
      */

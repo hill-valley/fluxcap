@@ -347,26 +347,6 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFormatLocalized */
-    public function testFormatLocalized(string $expected, string $format, DateTime $dateTime): void
-    {
-        $this->setLocale(LC_TIME, 'de_DE.UTF-8');
-
-        self::assertSame($expected, $dateTime->formatLocalized($format));
-    }
-
-    public function dataFormatLocalized(): iterable
-    {
-        $dateTime = DateTime::fromString('2018-12-08 04:05:30');
-
-        return [
-            ['08.12.2018, 04:05:30 CET', '%x, %X %Z', $dateTime],
-            [' 8. Dezember 2018,  4:05:30', '%e. %B %Y, %k:%M:%S', $dateTime],
-            ['08.12.2018, 04:05:30 CET', '%x, %X %Z', $dateTime->toUtc()],
-            ['08.12.2018, 12:05:30 CET', '%x, %X %Z', DateTime::fromString('2018-12-08 04:05:30-07:00')],
-        ];
-    }
-
     /** @dataProvider dataFormatIntl */
     public function testFormatIntl(string $expected, ...$parameters): void
     {

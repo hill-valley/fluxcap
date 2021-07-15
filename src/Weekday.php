@@ -124,16 +124,6 @@ final class Weekday implements \JsonSerializable
         // @codeCoverageIgnoreEnd
     }
 
-    public function getLocalizedName(): string
-    {
-        return $this->formatLocalized('%A');
-    }
-
-    public function getLocalizedAbbreviation(): string
-    {
-        return $this->formatLocalized('%a');
-    }
-
     public function getIntlName(): string
     {
         /** @psalm-suppress ImpureFunctionCall */
