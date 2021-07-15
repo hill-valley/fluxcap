@@ -62,18 +62,22 @@ final class Duration implements \JsonSerializable
         );
     }
 
-    /** @psalm-pure */
+    /**
+     * @psalm-pure
+     * @psalm-suppress ImpurePropertyAssignment
+     */
     public static function fromParts(int $years = 0, int $months = 0, int $weeks = 0, int $days = 0, int $hours = 0, int $minutes = 0, int $seconds = 0, int $microseconds = 0, bool $inverted = false): self
     {
-        /** @psalm-suppress ImpureMethodCall */ $interval = new \DateInterval('PT0S');
-        /** @psalm-suppress ImpurePropertyAssignment */ $interval->invert = (int) $inverted;
-        /** @psalm-suppress ImpurePropertyAssignment */ $interval->y = $years;
-        /** @psalm-suppress ImpurePropertyAssignment */ $interval->m = $months;
-        /** @psalm-suppress ImpurePropertyAssignment */ $interval->d = $weeks * 7 + $days;
-        /** @psalm-suppress ImpurePropertyAssignment */ $interval->h = $hours;
-        /** @psalm-suppress ImpurePropertyAssignment */ $interval->i = $minutes;
-        /** @psalm-suppress ImpurePropertyAssignment */ $interval->s = $seconds;
-        /** @psalm-suppress ImpurePropertyAssignment */ $interval->f = $microseconds / 1_000_000;
+        /** @psalm-suppress ImpureMethodCall */
+        $interval = new \DateInterval('PT0S');
+        $interval->invert = (int) $inverted;
+        $interval->y = $years;
+        $interval->m = $months;
+        $interval->d = $weeks * 7 + $days;
+        $interval->h = $hours;
+        $interval->i = $minutes;
+        $interval->s = $seconds;
+        $interval->f = $microseconds / 1_000_000;
 
         return new self($interval);
     }

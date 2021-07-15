@@ -65,7 +65,7 @@ return (new PhpCsFixer\Config())
         ],
     ])
     ->setFinder(
-        PhpCsFixer\Finder::create()
+        (new PhpCsFixer\Finder())
             ->in(__DIR__.'/src')
             ->in(__DIR__.'/tests')
             ->append([__FILE__])
