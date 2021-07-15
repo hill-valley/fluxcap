@@ -190,14 +190,6 @@ final class TimeTest extends TestCase
         ];
     }
 
-    public function testFormatLocalized(): void
-    {
-        $this->setLocale(LC_TIME, 'de_DE.UTF-8');
-
-        $time = Time::fromString('22:05:00');
-        self::assertSame('01.01.1970 22:05:00 GMT', $time->formatLocalized('%x %X %Z'));
-    }
-
     public function testFormatIntl(): void
     {
         $time = Time::fromString('03:20:50.123456');

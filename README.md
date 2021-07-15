@@ -47,7 +47,6 @@ $time = Time::fromString('09:30:00');
 $dateTime->getYear();
 $dateTime->toIso(); // 2015-10-21T09:30:00.000000+02:00
 $dateTime->format('d.m.Y, H:i');
-$dateTime->formatLocalized('%d. %B %Y'); // via strftime
 $dateTime->formatIntl(\IntlDateFormatter::MEDIUM); // requires intl extension
 
 $dateTime2 = $dateTime->addDays(3);
@@ -90,9 +89,6 @@ $weekday = Weekday::tuesday();
 
 $weekday->getName();
 $weekday->getAbbreviation();
-
-$weekday->getLocalizedName(); // via strftime
-$weekday->getLocalizedAbbreviation();
 
 $weekday->getIntlName(); // via intl extension
 $weekday->getIntlAbbreviation();

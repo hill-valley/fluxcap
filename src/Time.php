@@ -149,11 +149,6 @@ final class Time implements \JsonSerializable
         return $this->dateTime->format('H:i:s.u');
     }
 
-    public function formatLocalized(string $format): string
-    {
-        return gmstrftime($format, $this->dateTime->getTimestamp());
-    }
-
     /**
      * @param \IntlDateFormatter::FULL|\IntlDateFormatter::LONG|\IntlDateFormatter::MEDIUM|\IntlDateFormatter::SHORT|\IntlDateFormatter::NONE|null $format
      */
