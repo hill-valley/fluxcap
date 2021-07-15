@@ -185,14 +185,6 @@ final class DateTest extends TestCase
         self::assertSame($expected, (string) $date);
     }
 
-    public function testFormatLocalized(): void
-    {
-        $this->setLocale(LC_TIME, 'de_DE.UTF-8');
-
-        $date = Date::fromString('2018-12-01');
-        self::assertSame('Sa, 01. Dezember 2018 00:00:00 GMT', $date->formatLocalized('%a, %d. %B %Y %T %Z'));
-    }
-
     public function testFormatIntl(): void
     {
         $date = Date::fromString('2018-12-01');

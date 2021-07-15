@@ -133,11 +133,6 @@ trait EnumTrait
         ];
     }
 
-    private function formatLocalized(string $format): string
-    {
-        return strftime($format, $this->toTimestamp());
-    }
-
     private function formatIntl(string $format): string
     {
         return IntlFormatter::formatTimestamp($this->toTimestamp(), $format);

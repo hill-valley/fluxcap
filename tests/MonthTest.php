@@ -151,24 +151,6 @@ final class MonthTest extends TestCase
         self::assertSame('Oct', $month->getAbbreviation());
     }
 
-    public function testGetLocalizedName(): void
-    {
-        $this->setLocale(LC_TIME, 'de_DE.UTF-8');
-
-        $month = Month::get(Month::OCTOBER);
-
-        self::assertSame('Oktober', $month->getLocalizedName());
-    }
-
-    public function testGetLocalizedAbbreviation(): void
-    {
-        $this->setLocale(LC_TIME, 'de_DE.UTF-8');
-
-        $month = Month::get(Month::OCTOBER);
-
-        self::assertSame('Okt', $month->getLocalizedAbbreviation());
-    }
-
     public function testGetIntlName(): void
     {
         $month = Month::get(Month::OCTOBER);

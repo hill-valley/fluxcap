@@ -143,24 +143,6 @@ final class WeekdayTest extends TestCase
         self::assertSame('Sat', $weekday->getAbbreviation());
     }
 
-    public function testGetLocalizedName(): void
-    {
-        $this->setLocale(LC_TIME, 'de_DE.UTF-8');
-
-        $weekday = Weekday::get(Weekday::SATURDAY);
-
-        self::assertSame('Samstag', $weekday->getLocalizedName());
-    }
-
-    public function testGetLocalizedAbbreviation(): void
-    {
-        $this->setLocale(LC_TIME, 'de_DE.UTF-8');
-
-        $weekday = Weekday::get(Weekday::SATURDAY);
-
-        self::assertSame('Sa', $weekday->getLocalizedAbbreviation());
-    }
-
     public function testGetIntlName(): void
     {
         $weekday = Weekday::get(Weekday::SATURDAY);

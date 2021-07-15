@@ -169,16 +169,6 @@ final class Month implements \JsonSerializable
         // @codeCoverageIgnoreEnd
     }
 
-    public function getLocalizedName(): string
-    {
-        return $this->formatLocalized('%B');
-    }
-
-    public function getLocalizedAbbreviation(): string
-    {
-        return $this->formatLocalized('%b');
-    }
-
     public function getIntlName(): string
     {
         /** @psalm-suppress ImpureFunctionCall */
