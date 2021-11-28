@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace HillValley\Fluxcap\Tests;
 
-use HillValley\Fluxcap\Date;
 use HillValley\Fluxcap\DateTime;
 use HillValley\Fluxcap\Duration;
 use HillValley\Fluxcap\Exception\FormatMismatchException;
