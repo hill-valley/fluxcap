@@ -16,7 +16,5 @@
     </projectFiles>
 
     <issueHandlers>
-        <RedundantConditionGivenDocblockType errorLevel="suppress"/>
-        <TraitMethodSignatureMismatch errorLevel="suppress"/>
     </issueHandlers>
 </psalm>

@@ -9,16 +9,12 @@ use HillValley\Fluxcap\Exception\FormatMismatchException;
 use HillValley\Fluxcap\Exception\InvalidPartException;
 use HillValley\Fluxcap\Exception\InvalidStringException;
 use HillValley\Fluxcap\Exception\MissingIntlExtensionException;
-use function get_class;
-use function gettype;
 use function is_int;
-use function is_object;
-use function is_string;
 
 /**
  * @psalm-immutable
  */
-final class DateTime implements \JsonSerializable
+final class DateTime implements \JsonSerializable, \Stringable
 {
     use Base\CompareTrait;
     use Base\DateTrait;
@@ -73,7 +69,7 @@ final class DateTime implements \JsonSerializable
         }
 
         try {
-            $dateTime = new \DateTimeImmutable($dateTime, $timeZone ? $timeZone->toNative() : null);
+            $dateTime = new \DateTimeImmutable($dateTime, $timeZone?->toNative());
         } catch (\Exception $exception) {
             throw InvalidStringException::wrap($exception);
         }
@@ -100,7 +96,7 @@ final class DateTime implements \JsonSerializable
     /** @psalm-mutation-free */
     public static function fromFormat(string $format, string $dateTime, ?TimeZone $timeZone = null): self
     {
-        $native = \DateTimeImmutable::createFromFormat($format, $dateTime, $timeZone ? $timeZone->toNative() : null);
+        $native = \DateTimeImmutable::createFromFormat($format, $dateTime, $timeZone?->toNative());
 
         if (false === $native) {
             throw FormatMismatchException::create($format, $dateTime);
@@ -154,7 +150,7 @@ final class DateTime implements \JsonSerializable
     /** @psalm-pure */
     public static function fromNative(\DateTimeInterface $dateTime): self
     {
-        if (\DateTimeImmutable::class !== get_class($dateTime)) {
+        if (\DateTimeImmutable::class !== $dateTime::class) {
             /** @psalm-suppress ImpureMethodCall */
             $dateTime = new \DateTimeImmutable($dateTime->format('Y-m-d H:i:s.u'), $dateTime->getTimezone());
         }
@@ -168,11 +164,8 @@ final class DateTime implements \JsonSerializable
         return self::fromString($date->format('Y-m-d').'T'.$time->format('H:i:s.u'), $timeZone);
     }
 
-    /**
-     * @param int|string|self|Date|Time|\DateTimeInterface $dateTime
-     * @psalm-mutation-free
-     */
-    public static function cast($dateTime): self
+    /** @psalm-mutation-free */
+    public static function cast(int|string|self|Date|Time|\DateTimeInterface $dateTime): self
     {
         if (is_int($dateTime)) {
             return self::fromTimestamp($dateTime);
@@ -194,18 +187,7 @@ final class DateTime implements \JsonSerializable
             return self::fromNative($dateTime);
         }
 
-        if (is_string($dateTime)) {
-            return self::fromString($dateTime);
-        }
-
-        // @codeCoverageIgnoreStart
-        throw new \TypeError(sprintf(
-            '%s(): Argument #1 must be of type %s, %s given',
-            __METHOD__,
-            implode('|', ['int', 'string', self::class, Date::class, Time::class, \DateTimeInterface::class]),
-            is_object($dateTime) ? get_class($dateTime) : gettype($dateTime),
-        ));
-        // @codeCoverageIgnoreEnd
+        return self::fromString($dateTime);
     }
 
     public function getTimeZone(): TimeZone
@@ -220,11 +202,7 @@ final class DateTime implements \JsonSerializable
 
     public function toIso(): string
     {
-        if ($this->timeZone->isUtc()) {
-            return $this->dateTime->format('Y-m-d\TH:i:s.u').'Z';
-        }
-
-        return $this->dateTime->format('Y-m-d\TH:i:s.uP');
+        return $this->dateTime->format('Y-m-d\TH:i:s.up');
     }
 
     /**

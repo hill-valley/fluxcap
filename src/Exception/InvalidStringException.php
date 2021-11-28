@@ -24,7 +24,7 @@ final class InvalidStringException extends \DomainException implements Exception
     {
         $message = $exception->getMessage();
 
-        if (0 === strpos($message, $needle = 'DateTimeImmutable::__construct(): ')) {
+        if (str_starts_with($message, $needle = 'DateTimeImmutable::__construct(): ')) {
             $message = substr($message, strlen($needle));
         }
 

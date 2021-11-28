@@ -9,16 +9,12 @@ use HillValley\Fluxcap\Exception\FormatMismatchException;
 use HillValley\Fluxcap\Exception\InvalidPartException;
 use HillValley\Fluxcap\Exception\InvalidStringException;
 use HillValley\Fluxcap\Exception\MissingIntlExtensionException;
-use function get_class;
-use function gettype;
 use function is_int;
-use function is_object;
-use function is_string;
 
 /**
  * @psalm-immutable
  */
-final class Date implements \JsonSerializable
+final class Date implements \JsonSerializable, \Stringable
 {
     use Base\CompareTrait;
     use Base\DateTrait;
@@ -115,7 +111,7 @@ final class Date implements \JsonSerializable
     /** @psalm-pure */
     public static function fromNative(\DateTimeInterface $dateTime): self
     {
-        if (\DateTimeImmutable::class !== get_class($dateTime) || '00:00:00.000000 UTC' !== $dateTime->format('H:i:s.u e')) {
+        if (\DateTimeImmutable::class !== $dateTime::class || '00:00:00.000000 UTC' !== $dateTime->format('H:i:s.u e')) {
             /** @psalm-suppress ImpureMethodCall */
             $dateTime = new \DateTimeImmutable($dateTime->format('Y-m-d'), TimeZone::utc()->toNative());
         }
@@ -123,11 +119,8 @@ final class Date implements \JsonSerializable
         return new self($dateTime);
     }
 
-    /**
-     * @param int|string|self|DateTime|\DateTimeInterface $dateTime
-     * @psalm-mutation-free
-     */
-    public static function cast($dateTime): self
+    /** @psalm-mutation-free */
+    public static function cast(int|string|self|DateTime|\DateTimeInterface $dateTime): self
     {
         if (is_int($dateTime)) {
             return self::fromTimestamp($dateTime);
@@ -145,18 +138,7 @@ final class Date implements \JsonSerializable
             return self::fromNative($dateTime);
         }
 
-        if (is_string($dateTime)) {
-            return self::fromString($dateTime);
-        }
-
-        // @codeCoverageIgnoreStart
-        throw new \TypeError(sprintf(
-            '%s(): Argument #1 must be of type %s, %s given',
-            __METHOD__,
-            implode('|', ['int', 'string', self::class, DateTime::class, \DateTimeInterface::class]),
-            is_object($dateTime) ? get_class($dateTime) : gettype($dateTime),
-        ));
-        // @codeCoverageIgnoreEnd
+        return self::fromString($dateTime);
     }
 
     public function toIso(): string

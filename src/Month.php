@@ -5,15 +5,11 @@ declare(strict_types=1);
 namespace HillValley\Fluxcap;
 
 use HillValley\Fluxcap\Exception\MissingIntlExtensionException;
-use function get_class;
-use function gettype;
-use function is_int;
-use function is_object;
 
 /**
  * @psalm-immutable
  */
-final class Month implements \JsonSerializable
+final class Month implements \JsonSerializable, \Stringable
 {
     use Base\EnumTrait;
 
@@ -132,11 +128,8 @@ final class Month implements \JsonSerializable
         return self::get(self::DECEMBER);
     }
 
-    /**
-     * @param int|self|Date|DateTime|\DateTimeInterface $month
-     * @psalm-pure
-     */
-    public static function cast($month): self
+    /** @psalm-pure */
+    public static function cast(int|self|Date|DateTime|\DateTimeInterface $month): self
     {
         if ($month instanceof self) {
             return $month;
@@ -155,18 +148,7 @@ final class Month implements \JsonSerializable
             return self::get((int) $month->format('n'));
         }
 
-        if (is_int($month)) {
-            return self::get($month);
-        }
-
-        // @codeCoverageIgnoreStart
-        throw new \TypeError(sprintf(
-            '%s(): Argument #1 must be of type %s, %s given',
-            __METHOD__,
-            implode('|', ['int', self::class, Date::class, DateTime::class, \DateTimeInterface::class]),
-            is_object($month) ? get_class($month) : gettype($month),
-        ));
-        // @codeCoverageIgnoreEnd
+        return self::get($month);
     }
 
     public function getIntlName(): string

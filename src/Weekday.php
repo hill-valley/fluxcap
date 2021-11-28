@@ -5,15 +5,11 @@ declare(strict_types=1);
 namespace HillValley\Fluxcap;
 
 use HillValley\Fluxcap\Exception\MissingIntlExtensionException;
-use function get_class;
-use function gettype;
-use function is_int;
-use function is_object;
 
 /**
  * @psalm-immutable
  */
-final class Weekday implements \JsonSerializable
+final class Weekday implements \JsonSerializable, \Stringable
 {
     use Base\EnumTrait;
 
@@ -87,11 +83,8 @@ final class Weekday implements \JsonSerializable
         return self::get(self::SUNDAY);
     }
 
-    /**
-     * @param int|self|Date|DateTime|\DateTimeInterface $weekday
-     * @psalm-pure
-     */
-    public static function cast($weekday): self
+    /** @psalm-pure */
+    public static function cast(int|self|Date|DateTime|\DateTimeInterface $weekday): self
     {
         if ($weekday instanceof self) {
             return $weekday;
@@ -110,18 +103,7 @@ final class Weekday implements \JsonSerializable
             return self::get((int) $weekday->format('N'));
         }
 
-        if (is_int($weekday)) {
-            return self::get($weekday);
-        }
-
-        // @codeCoverageIgnoreStart
-        throw new \TypeError(sprintf(
-            '%s(): Argument #1 must be of type %s, %s given',
-            __METHOD__,
-            implode('|', ['int', self::class, Date::class, DateTime::class, \DateTimeInterface::class]),
-            is_object($weekday) ? get_class($weekday) : gettype($weekday),
-        ));
-        // @codeCoverageIgnoreEnd
+        return self::get($weekday);
     }
 
     public function getIntlName(): string
