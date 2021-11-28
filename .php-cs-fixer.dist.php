@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use PhpCsFixer\Fixer\Import\OrderedImportsFixer;
-
 return (new PhpCsFixer\Config())
     ->setUsingCache(true)
     ->setRiskyAllowed(true)
@@ -26,7 +24,7 @@ return (new PhpCsFixer\Config())
         'explicit_string_variable' => false,
         'final_class' => true,
         'global_namespace_import' => [
-            'import_constants' => false,
+            'import_constants' => true,
             'import_functions' => true,
             'import_classes' => false,
         ],
@@ -51,9 +49,9 @@ return (new PhpCsFixer\Config())
             'method_private',
         ]],
         'ordered_imports' => ['imports_order' => [
-            OrderedImportsFixer::IMPORT_TYPE_CLASS,
-            OrderedImportsFixer::IMPORT_TYPE_CONST,
-            OrderedImportsFixer::IMPORT_TYPE_FUNCTION,
+            'class',
+            'const',
+            'function',
         ]],
         'php_unit_test_case_static_method_calls' => ['call_type' => 'self'],
         'phpdoc_add_missing_param_annotation' => false,
