@@ -15,6 +15,7 @@ use HillValley\Fluxcap\Time;
 use HillValley\Fluxcap\TimeZone;
 use HillValley\Fluxcap\Weekday;
 use PHPUnit\Framework\TestCase;
+use const PHP_VERSION_ID;
 
 /**
  * @internal
@@ -1095,7 +1096,7 @@ final class DateTimeTest extends TestCase
     public function testDiff(string $expected, DateTime $dateTime, DateTime $other, bool $skipPhp81 = false, ...$parameters): void
     {
         if ($skipPhp81 && PHP_VERSION_ID >= 8_01_00) {
-            $this->markTestSkipped('See https://bugs.php.net/81263');
+            self::markTestSkipped('See https://bugs.php.net/81263');
         }
 
         $duration = $dateTime->diff($other, ...$parameters);
