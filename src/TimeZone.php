@@ -5,15 +5,11 @@ declare(strict_types=1);
 namespace HillValley\Fluxcap;
 
 use HillValley\Fluxcap\Exception\InvalidStringException;
-use function get_class;
-use function gettype;
-use function is_object;
-use function is_string;
 
 /**
  * @psalm-immutable
  */
-final class TimeZone implements \JsonSerializable
+final class TimeZone implements \JsonSerializable, \Stringable
 {
     private \DateTimeZone $timeZone;
 
@@ -66,7 +62,7 @@ final class TimeZone implements \JsonSerializable
 
         try {
             $native = new \DateTimeZone($timeZone);
-        } catch (\Exception $exception) {
+        } catch (\Exception) {
             throw InvalidStringException::create("Unknown time zone \"$timeZone\".");
         }
 
@@ -79,11 +75,8 @@ final class TimeZone implements \JsonSerializable
         return new self($timeZone);
     }
 
-    /**
-     * @param string|self|\DateTimeZone $timeZone
-     * @psalm-pure
-     */
-    public static function cast($timeZone): self
+    /** @psalm-pure */
+    public static function cast(string|self|\DateTimeZone $timeZone): self
     {
         if ($timeZone instanceof self) {
             return $timeZone;
@@ -93,18 +86,7 @@ final class TimeZone implements \JsonSerializable
             return new self($timeZone);
         }
 
-        if (is_string($timeZone)) {
-            return self::fromString($timeZone);
-        }
-
-        // @codeCoverageIgnoreStart
-        throw new \TypeError(sprintf(
-            '%s(): Argument #1 must be of type %s, %s given',
-            __METHOD__,
-            implode('|', ['string', self::class, \DateTimeZone::class]),
-            is_object($timeZone) ? get_class($timeZone) : gettype($timeZone),
-        ));
-        // @codeCoverageIgnoreEnd
+        return self::fromString($timeZone);
     }
 
     public function __toString(): string

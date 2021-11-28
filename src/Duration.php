@@ -5,16 +5,12 @@ declare(strict_types=1);
 namespace HillValley\Fluxcap;
 
 use HillValley\Fluxcap\Exception\InvalidStringException;
-use function get_class;
-use function gettype;
 use function is_int;
-use function is_object;
-use function is_string;
 
 /**
  * @psalm-immutable
  */
-final class Duration implements \JsonSerializable
+final class Duration implements \JsonSerializable, \Stringable
 {
     private \DateInterval $interval;
 
@@ -88,11 +84,8 @@ final class Duration implements \JsonSerializable
         return new self(clone $interval);
     }
 
-    /**
-     * @param string|self|\DateInterval $duration
-     * @psalm-pure
-     */
-    public static function cast($duration): self
+    /** @psalm-pure */
+    public static function cast(string|self|\DateInterval $duration): self
     {
         if ($duration instanceof self) {
             return $duration;
@@ -102,18 +95,7 @@ final class Duration implements \JsonSerializable
             return self::fromNative($duration);
         }
 
-        if (is_string($duration)) {
-            return self::fromString($duration);
-        }
-
-        // @codeCoverageIgnoreStart
-        throw new \TypeError(sprintf(
-            '%s(): Argument #1 must be of type %s, %s given',
-            __METHOD__,
-            implode('|', ['string', self::class, \DateInterval::class]),
-            is_object($duration) ? get_class($duration) : gettype($duration),
-        ));
-        // @codeCoverageIgnoreEnd
+        return self::fromString($duration);
     }
 
     /** @psalm-pure */

@@ -16,7 +16,7 @@ trait DateTrait
 {
     private \DateTimeImmutable $dateTime;
 
-    abstract protected function __construct(\DateTimeImmutable $dateTime);
+    abstract private function __construct(\DateTimeImmutable $dateTime);
 
     public function getYear(): int
     {
@@ -145,10 +145,7 @@ trait DateTrait
         return Weekday::get($this->getWeekday());
     }
 
-    /**
-     * @param int|Weekday $weekday
-     */
-    public function toPrevWeekday($weekday): self
+    public function toPrevWeekday(int|Weekday $weekday): self
     {
         $current = $this->toWeekday();
         $weekday = Weekday::cast($weekday);
@@ -160,10 +157,7 @@ trait DateTrait
         return $this->subDays($current->diffToPrev($weekday));
     }
 
-    /**
-     * @param int|Weekday $weekday
-     */
-    public function toNextWeekday($weekday): self
+    public function toNextWeekday(int|Weekday $weekday): self
     {
         $current = $this->toWeekday();
         $weekday = Weekday::cast($weekday);
