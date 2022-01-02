@@ -12,7 +12,7 @@ use HillValley\Fluxcap\Duration;
  */
 trait TimeTrait
 {
-    private \DateTimeImmutable $dateTime;
+    private readonly \DateTimeImmutable $dateTime;
 
     public function getHour(): int
     {

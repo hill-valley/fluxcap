@@ -14,7 +14,7 @@ use HillValley\Fluxcap\Weekday;
  */
 trait DateTrait
 {
-    private \DateTimeImmutable $dateTime;
+    private readonly \DateTimeImmutable $dateTime;
 
     abstract private function __construct(\DateTimeImmutable $dateTime);
 

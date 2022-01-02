@@ -21,7 +21,7 @@ final class Date implements \JsonSerializable, \Stringable
     use Base\FormatTrait;
     use Base\ModifyTrait;
 
-    private \DateTimeImmutable $dateTime;
+    private readonly \DateTimeImmutable $dateTime;
 
     private function __construct(\DateTimeImmutable $dateTime)
     {

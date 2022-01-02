@@ -22,8 +22,8 @@ final class DateTime implements \JsonSerializable, \Stringable
     use Base\ModifyTrait;
     use Base\TimeTrait;
 
-    private \DateTimeImmutable $dateTime;
-    private TimeZone $timeZone;
+    private readonly \DateTimeImmutable $dateTime;
+    private readonly TimeZone $timeZone;
 
     private function __construct(\DateTimeImmutable $dateTime, ?TimeZone $timeZone = null)
     {

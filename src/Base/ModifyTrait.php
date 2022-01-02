@@ -12,7 +12,7 @@ use HillValley\Fluxcap\Duration;
  */
 trait ModifyTrait
 {
-    private \DateTimeImmutable $dateTime;
+    private readonly \DateTimeImmutable $dateTime;
 
     public function modify(string $modify): self
     {

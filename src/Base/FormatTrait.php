@@ -10,7 +10,7 @@ namespace HillValley\Fluxcap\Base;
  */
 trait FormatTrait
 {
-    private \DateTimeImmutable $dateTime;
+    private readonly \DateTimeImmutable $dateTime;
 
     public function __toString(): string
     {

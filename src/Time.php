@@ -23,7 +23,7 @@ final class Time implements \JsonSerializable, \Stringable
 
     private const DATE = '1970-01-01';
 
-    private \DateTimeImmutable $dateTime;
+    private readonly \DateTimeImmutable $dateTime;
 
     private function __construct(\DateTimeImmutable $dateTime)
     {

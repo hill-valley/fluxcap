@@ -11,7 +11,7 @@ use HillValley\Fluxcap\Exception\InvalidStringException;
  */
 final class TimeZone implements \JsonSerializable, \Stringable
 {
-    private \DateTimeZone $timeZone;
+    private readonly \DateTimeZone $timeZone;
 
     private function __construct(\DateTimeZone $timeZone)
     {
