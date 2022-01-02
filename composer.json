@@ -17,14 +17,14 @@
     },
 
     "require": {
-        "php": "^8.0"
+        "php": "^8.1"
     },
 
     "require-dev": {
         "ext-intl": "*",
-        "friendsofphp/php-cs-fixer": "^3.3",
+        "friendsofphp/php-cs-fixer": "^3.4",
         "phpunit/phpunit": "^9.5",
-        "vimeo/psalm": "^4.13"
+        "vimeo/psalm": "^4.17"
     },
 
     "suggest": {
@@ -35,7 +35,10 @@
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     },
 
     "scripts": {
