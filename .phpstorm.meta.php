@@ -2,14 +2,6 @@
 
 namespace PHPSTORM_META;
 
-registerArgumentsSet('month', \HillValley\Fluxcap\Month::JANUARY, \HillValley\Fluxcap\Month::FEBRUARY, \HillValley\Fluxcap\Month::MARCH, \HillValley\Fluxcap\Month::APRIL, \HillValley\Fluxcap\Month::MAY, \HillValley\Fluxcap\Month::JUNE, \HillValley\Fluxcap\Month::JULY, \HillValley\Fluxcap\Month::AUGUST, \HillValley\Fluxcap\Month::SEPTEMBER, \HillValley\Fluxcap\Month::OCTOBER, \HillValley\Fluxcap\Month::NOVEMBER, \HillValley\Fluxcap\Month::DECEMBER);
-expectedArguments(\HillValley\Fluxcap\Month::get(), 0, argumentsSet('month'));
-expectedReturnValues(\HillValley\Fluxcap\Month::getIndex(), argumentsSet('month'));
-
-registerArgumentsSet('weekday', \HillValley\Fluxcap\Weekday::MONDAY, \HillValley\Fluxcap\Weekday::TUESDAY, \HillValley\Fluxcap\Weekday::WEDNESDAY, \HillValley\Fluxcap\Weekday::THURSDAY, \HillValley\Fluxcap\Weekday::FRIDAY, \HillValley\Fluxcap\Weekday::SATURDAY, \HillValley\Fluxcap\Weekday::SUNDAY);
-expectedArguments(\HillValley\Fluxcap\Weekday::get(), 0, argumentsSet('weekday'));
-expectedReturnValues(\HillValley\Fluxcap\Weekday::getIndex(), argumentsSet('weekday'));
-
 registerArgumentsSet('intl_format', \IntlDateFormatter::FULL, \IntlDateFormatter::LONG, \IntlDateFormatter::MEDIUM, \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE);
 expectedArguments(\HillValley\Fluxcap\Date::formatIntl(), 0, argumentsSet('intl_format'));
 expectedArguments(\HillValley\Fluxcap\DateTime::formatIntl(), 0, argumentsSet('intl_format'));

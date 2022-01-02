@@ -137,18 +137,17 @@ trait DateTrait
 
     public function toMonth(): Month
     {
-        return Month::get($this->getMonth());
+        return Month::from($this->getMonth());
     }
 
     public function toWeekday(): Weekday
     {
-        return Weekday::get($this->getWeekday());
+        return Weekday::from($this->getWeekday());
     }
 
-    public function toPrevWeekday(int|Weekday $weekday): self
+    public function toPrevWeekday(Weekday $weekday): self
     {
         $current = $this->toWeekday();
-        $weekday = Weekday::cast($weekday);
 
         if ($current === $weekday) {
             return $this;
@@ -157,10 +156,9 @@ trait DateTrait
         return $this->subDays($current->diffToPrev($weekday));
     }
 
-    public function toNextWeekday(int|Weekday $weekday): self
+    public function toNextWeekday(Weekday $weekday): self
     {
         $current = $this->toWeekday();
-        $weekday = Weekday::cast($weekday);
 
         if ($current === $weekday) {
             return $this;

@@ -29,6 +29,22 @@ return (new PhpCsFixer\Config())
             'import_classes' => false,
         ],
         'list_syntax' => ['syntax' => 'short'],
+        'no_extra_blank_lines' => [
+            'tokens' => [
+                'break',
+                // 'case',
+                'continue',
+                'curly_brace_block',
+                'default',
+                'extra',
+                'parenthesis_brace_block',
+                'return',
+                'square_brace_block',
+                'switch',
+                'throw',
+                'use',
+            ],
+        ],
         'no_superfluous_phpdoc_tags' => ['allow_mixed' => true],
         'ordered_class_elements' => ['order' => [
             'use_trait',

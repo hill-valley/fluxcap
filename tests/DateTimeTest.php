@@ -987,40 +987,36 @@ final class DateTimeTest extends TestCase
     }
 
     /** @dataProvider dataToMonth */
-    public function testToMonth(int $expected, string $dateTime): void
+    public function testToMonth(Month $expected, string $dateTime): void
     {
         $dateTime = DateTime::fromString($dateTime);
-        $month = $dateTime->toMonth();
 
-        self::assertInstanceOf(Month::class, $month);
-        self::assertSame($expected, $month->getIndex());
+        self::assertSame($expected, $dateTime->toMonth());
     }
 
     public function dataToMonth(): iterable
     {
         return [
-            [Month::MARCH, '2019-03-12 12:05:23'],
-            [Month::FEBRUARY, '2020-02-29 23:59:59'],
-            [Month::JULY, '2020-07-01 00:00:00'],
+            [Month::March, '2019-03-12 12:05:23'],
+            [Month::February, '2020-02-29 23:59:59'],
+            [Month::July, '2020-07-01 00:00:00'],
         ];
     }
 
     /** @dataProvider dataToWeekday */
-    public function testToWeekday(int $expected, string $dateTime): void
+    public function testToWeekday(Weekday $expected, string $dateTime): void
     {
         $dateTime = DateTime::fromString($dateTime);
-        $weekday = $dateTime->toWeekday();
 
-        self::assertInstanceOf(Weekday::class, $weekday);
-        self::assertSame($expected, $weekday->getIndex());
+        self::assertSame($expected, $dateTime->toWeekday());
     }
 
     public function dataToWeekday(): iterable
     {
         return [
-            [Weekday::MONDAY, '2019-07-15 12:05:23'],
-            [Weekday::THURSDAY, '2020-12-31 00:00:00'],
-            [Weekday::SUNDAY, '2021-01-03 12:05:23'],
+            [Weekday::Monday, '2019-07-15 12:05:23'],
+            [Weekday::Thursday, '2020-12-31 00:00:00'],
+            [Weekday::Sunday, '2021-01-03 12:05:23'],
         ];
     }
 
@@ -1035,9 +1031,9 @@ final class DateTimeTest extends TestCase
     public function dataToPrevWeekday(): iterable
     {
         return [
-            ['2019-07-15 12:05:23.000000 Europe/Berlin', '2019-07-15 12:05:23', Weekday::MONDAY],
-            ['2019-07-14 12:05:23.000000 Europe/Berlin', '2019-07-15 12:05:23', Weekday::sunday()],
-            ['2020-12-26 00:00:00.000000 Europe/Berlin', '2021-01-01 00:00:00', Weekday::SATURDAY],
+            ['2019-07-15 12:05:23.000000 Europe/Berlin', '2019-07-15 12:05:23', Weekday::Monday],
+            ['2019-07-14 12:05:23.000000 Europe/Berlin', '2019-07-15 12:05:23', Weekday::Sunday],
+            ['2020-12-26 00:00:00.000000 Europe/Berlin', '2021-01-01 00:00:00', Weekday::Saturday],
         ];
     }
 
@@ -1052,9 +1048,9 @@ final class DateTimeTest extends TestCase
     public function dataToNextWeekday(): iterable
     {
         return [
-            ['2019-07-14 12:05:23.000000 Europe/Berlin', '2019-07-14 12:05:23', Weekday::SUNDAY],
-            ['2019-07-15 12:05:23.000000 Europe/Berlin', '2019-07-14 12:05:23', Weekday::monday()],
-            ['2021-01-01 00:00:00.000000 Europe/Berlin', '2020-12-26 00:00:00', Weekday::FRIDAY],
+            ['2019-07-14 12:05:23.000000 Europe/Berlin', '2019-07-14 12:05:23', Weekday::Sunday],
+            ['2019-07-15 12:05:23.000000 Europe/Berlin', '2019-07-14 12:05:23', Weekday::Monday],
+            ['2021-01-01 00:00:00.000000 Europe/Berlin', '2020-12-26 00:00:00', Weekday::Friday],
         ];
     }
 

@@ -6,7 +6,6 @@ namespace HillValley\Fluxcap\Tests;
 
 use HillValley\Fluxcap\Date;
 use HillValley\Fluxcap\DateTime;
-use HillValley\Fluxcap\Exception\InvalidPartException;
 use HillValley\Fluxcap\Weekday;
 use PHPUnit\Framework\TestCase;
 
@@ -17,86 +16,21 @@ use PHPUnit\Framework\TestCase;
  */
 final class WeekdayTest extends TestCase
 {
-    public function testConstruct(): void
-    {
-        $method = new \ReflectionMethod(Weekday::class, '__construct');
-
-        self::assertTrue($method->isPrivate());
-    }
-
-    public function testGet(): void
-    {
-        $weekday = Weekday::get(Weekday::TUESDAY);
-        self::assertInstanceOf(Weekday::class, $weekday);
-
-        $weekday2 = Weekday::get(Weekday::FRIDAY);
-        self::assertInstanceOf(Weekday::class, $weekday2);
-
-        self::assertNotSame($weekday, $weekday2);
-
-        $weekday3 = Weekday::get(Weekday::TUESDAY);
-        self::assertInstanceOf(Weekday::class, $weekday3);
-
-        self::assertSame($weekday, $weekday3);
-    }
-
-    /** @dataProvider dataGetInvalid */
-    public function testGetInvalid(int $index): void
-    {
-        $this->expectException(InvalidPartException::class);
-
-        Weekday::get($index);
-    }
-
-    public function dataGetInvalid(): iterable
-    {
-        return [
-            [-1],
-            [0],
-            [8],
-        ];
-    }
-
-    /** @dataProvider dataNamedConstructors */
-    public function testNamedConstructors(int $expectedIndex, string $method): void
-    {
-        /** @var Weekday $weekday */
-        $weekday = Weekday::$method();
-
-        self::assertInstanceOf(Weekday::class, $weekday);
-        self::assertSame($expectedIndex, $weekday->getIndex());
-    }
-
-    public function dataNamedConstructors(): iterable
-    {
-        return [
-            [Weekday::MONDAY, 'monday'],
-            [Weekday::TUESDAY, 'tuesday'],
-            [Weekday::WEDNESDAY, 'wednesday'],
-            [Weekday::THURSDAY, 'thursday'],
-            [Weekday::FRIDAY, 'friday'],
-            [Weekday::SATURDAY, 'saturday'],
-            [Weekday::SUNDAY, 'sunday'],
-        ];
-    }
-
     /** @dataProvider dataCast */
-    public function testCast(int $expected, $weekday): void
+    public function testCast(Weekday $expected, $weekday): void
     {
-        $weekday = Weekday::cast($weekday);
-        self::assertInstanceOf(Weekday::class, $weekday);
-        self::assertSame($expected, $weekday->getIndex());
+        self::assertSame($expected, Weekday::cast($weekday));
     }
 
     public function dataCast(): iterable
     {
         return [
-            [Weekday::WEDNESDAY, 3],
-            [Weekday::FRIDAY, Weekday::get(Weekday::FRIDAY)],
-            [Weekday::TUESDAY, Date::fromString('2019-03-26')],
-            [Weekday::TUESDAY, DateTime::fromString('2019-03-26 22:15:30')],
-            [Weekday::TUESDAY, new \DateTime('2019-03-26 22:15:30')],
-            [Weekday::TUESDAY, new \DateTimeImmutable('2019-03-26 22:15:30')],
+            [Weekday::Wednesday, 3],
+            [Weekday::Friday, Weekday::Friday],
+            [Weekday::Tuesday, Date::fromString('2019-03-26')],
+            [Weekday::Tuesday, DateTime::fromString('2019-03-26 22:15:30')],
+            [Weekday::Tuesday, new \DateTime('2019-03-26 22:15:30')],
+            [Weekday::Tuesday, new \DateTimeImmutable('2019-03-26 22:15:30')],
         ];
     }
 
@@ -105,146 +39,70 @@ final class WeekdayTest extends TestCase
         $all = Weekday::all();
 
         self::assertSame([
-            1 => Weekday::get(Weekday::MONDAY),
-            2 => Weekday::get(Weekday::TUESDAY),
-            3 => Weekday::get(Weekday::WEDNESDAY),
-            4 => Weekday::get(Weekday::THURSDAY),
-            5 => Weekday::get(Weekday::FRIDAY),
-            6 => Weekday::get(Weekday::SATURDAY),
-            7 => Weekday::get(Weekday::SUNDAY),
+            1 => Weekday::Monday,
+            2 => Weekday::Tuesday,
+            3 => Weekday::Wednesday,
+            4 => Weekday::Thursday,
+            5 => Weekday::Friday,
+            6 => Weekday::Saturday,
+            7 => Weekday::Sunday,
         ], $all);
-    }
-
-    public function testToString(): void
-    {
-        $weekday = Weekday::get(Weekday::SATURDAY);
-
-        self::assertSame('Saturday', (string) $weekday);
     }
 
     public function testGetIndex(): void
     {
-        $weekday = Weekday::get(Weekday::SATURDAY);
-
-        self::assertSame(6, $weekday->getIndex());
+        self::assertSame(6, Weekday::Saturday->getIndex());
     }
 
     public function testGetName(): void
     {
-        $weekday = Weekday::get(Weekday::SATURDAY);
-
-        self::assertSame('Saturday', $weekday->getName());
+        self::assertSame('Saturday', Weekday::Saturday->getName());
     }
 
     public function testGetAbbreviation(): void
     {
-        $weekday = Weekday::get(Weekday::SATURDAY);
-
-        self::assertSame('Sat', $weekday->getAbbreviation());
+        self::assertSame('Sat', Weekday::Saturday->getAbbreviation());
     }
 
     public function testGetIntlName(): void
     {
-        $weekday = Weekday::get(Weekday::SATURDAY);
-
-        self::assertSame('Samstag', $weekday->getIntlName());
+        self::assertSame('Samstag', Weekday::Saturday->getIntlName());
     }
 
     public function testGetIntlAbbreviation(): void
     {
-        $weekday = Weekday::get(Weekday::SATURDAY);
-
-        self::assertSame('Sa', $weekday->getIntlAbbreviation());
-    }
-
-    public function testEquals(): void
-    {
-        $weekday = Weekday::get(Weekday::FRIDAY);
-
-        self::assertTrue($weekday->equals(Weekday::get(Weekday::FRIDAY)));
-        self::assertTrue($weekday->equals(clone $weekday));
-        self::assertFalse($weekday->equals(Weekday::get(Weekday::TUESDAY)));
+        self::assertSame('Sa', Weekday::Saturday->getIntlAbbreviation());
     }
 
     /** @dataProvider dataDiffToPrev */
-    public function testDiffToPrev(int $expected, int $weekday, int $prev): void
+    public function testDiffToPrev(int $expected, Weekday $weekday, Weekday $prev): void
     {
-        $weekday = Weekday::get($weekday);
-
-        self::assertSame($expected, $weekday->diffToPrev(Weekday::get($prev)));
+        self::assertSame($expected, $weekday->diffToPrev($prev));
     }
 
     public function dataDiffToPrev(): iterable
     {
         return [
-            [1, Weekday::WEDNESDAY, Weekday::TUESDAY],
-            [6, Weekday::SUNDAY, Weekday::MONDAY],
-            [4, Weekday::TUESDAY, Weekday::FRIDAY],
-            [7, Weekday::TUESDAY, Weekday::TUESDAY],
+            [1, Weekday::Wednesday, Weekday::Tuesday],
+            [6, Weekday::Sunday, Weekday::Monday],
+            [4, Weekday::Tuesday, Weekday::Friday],
+            [7, Weekday::Tuesday, Weekday::Tuesday],
         ];
     }
 
     /** @dataProvider dataDiffToNext */
-    public function testDiffToNext(int $expected, int $weekday, int $next): void
+    public function testDiffToNext(int $expected, Weekday $weekday, Weekday $next): void
     {
-        $weekday = Weekday::get($weekday);
-
-        self::assertSame($expected, $weekday->diffToNext(Weekday::get($next)));
+        self::assertSame($expected, $weekday->diffToNext($next));
     }
 
     public function dataDiffToNext(): iterable
     {
         return [
-            [1, Weekday::TUESDAY, Weekday::WEDNESDAY],
-            [6, Weekday::MONDAY, Weekday::SUNDAY],
-            [4, Weekday::FRIDAY, Weekday::TUESDAY],
-            [7, Weekday::TUESDAY, Weekday::TUESDAY],
+            [1, Weekday::Tuesday, Weekday::Wednesday],
+            [6, Weekday::Monday, Weekday::Sunday],
+            [4, Weekday::Friday, Weekday::Tuesday],
+            [7, Weekday::Tuesday, Weekday::Tuesday],
         ];
-    }
-
-    public function testJsonSerialize(): void
-    {
-        $weekday = Weekday::get(Weekday::FRIDAY);
-
-        self::assertJsonStringEqualsJsonString('5', json_encode($weekday));
-    }
-
-    public function testSetState(): void
-    {
-        $weekday = Weekday::get(Weekday::FRIDAY);
-
-        $weekday2 = null;
-        eval('$weekday2 = '.var_export($weekday, true).';');
-
-        self::assertSame($weekday, $weekday2);
-    }
-
-    public function testSerialization(): void
-    {
-        $weekday = Weekday::get(Weekday::FRIDAY);
-
-        static::assertWeekday(Weekday::FRIDAY, unserialize(serialize($weekday)));
-    }
-
-    public function testDebugInfo(): void
-    {
-        $weekday = Weekday::get(Weekday::FRIDAY);
-
-        $expected = [
-            'index' => 5,
-            'name' => 'Friday',
-            'abbreviation' => 'Fri',
-        ];
-
-        self::assertSame($expected, $weekday->__debugInfo());
-    }
-
-    /**
-     * @param Weekday $weekday
-     */
-    private static function assertWeekday(int $expectedIndex, $weekday): void
-    {
-        self::assertInstanceOf(Weekday::class, $weekday);
-        self::assertSame($expectedIndex, $weekday->getIndex());
     }
 }
