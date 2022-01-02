@@ -12,10 +12,6 @@
         }
     ],
 
-    "autoload": {
-        "psr-4": { "HillValley\\Fluxcap\\": "src" }
-    },
-
     "require": {
         "php": "^8.1"
     },
@@ -29,6 +25,14 @@
 
     "suggest": {
         "ext-intl": "For international date-time formatting via the provided formatIntl() methods"
+    },
+
+    "autoload": {
+        "psr-4": { "HillValley\\Fluxcap\\": "src" }
+    },
+
+    "autoload-dev": {
+        "psr-4": { "HillValley\\Fluxcap\\Tests\\": "tests" }
     },
 
     "config": {
