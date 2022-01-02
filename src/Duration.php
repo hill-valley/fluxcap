@@ -12,7 +12,7 @@ use function is_int;
  */
 final class Duration implements \JsonSerializable, \Stringable
 {
-    private \DateInterval $interval;
+    private readonly \DateInterval $interval;
 
     private function __construct(\DateInterval $interval)
     {

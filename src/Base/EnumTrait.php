@@ -13,7 +13,7 @@ use function count;
  */
 trait EnumTrait
 {
-    private int $index;
+    private readonly int $index;
 
     private function __construct(int $index)
     {

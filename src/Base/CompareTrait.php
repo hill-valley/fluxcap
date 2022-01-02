@@ -12,7 +12,7 @@ use HillValley\Fluxcap\Duration;
  */
 trait CompareTrait
 {
-    private \DateTimeImmutable $dateTime;
+    private readonly \DateTimeImmutable $dateTime;
 
     /** @psalm-pure */
     public static function min(self $object, self ...$objects): self
