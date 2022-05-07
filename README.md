@@ -6,7 +6,7 @@ This package contains:
 - immutable classes `DateTime`, `Date` and `Time` (wrapping `\DateTimeImmutable`)
 - immutable class `TimeZone` (wrapping `\DateTimeZone`)
 - immutable class `Duration` (wrapping `\DateInterval`)
-- enum-like classes `Month` and `Weekday`
+- enums `Month` and `Weekday`
   
 [![Latest release](https://img.shields.io/github/v/release/hill-valley/fluxcap?sort=semver&style=flat-square)](https://github.com/hill-valley/fluxcap/releases)
 ![PHP version requirement](https://img.shields.io/packagist/php-v/hill-valley/fluxcap?style=flat-square)
@@ -79,11 +79,10 @@ $duration->getHours();
 use HillValley\Fluxcap\Month;
 use HillValley\Fluxcap\Weekday;
 
-$month = Month::get(Month::OCTOBER);
-$month = Month::october();
+$month = Month::October;
 
-$weekdays = Weekday::all();
-$weekday = Weekday::tuesday();
+$weekdays = Weekday::cases();
+$weekday = Weekday::Tuesday;
 
 // same methods for months
 
@@ -93,5 +92,5 @@ $weekday->getAbbreviation();
 $weekday->getIntlName(); // via intl extension
 $weekday->getIntlAbbreviation();
 
-$count = $weekday->diffToNext(Weekday::friday());
+$count = $weekday->diffToNext(Weekday::Friday);
 ```

@@ -6,7 +6,6 @@ namespace HillValley\Fluxcap\Tests;
 
 use HillValley\Fluxcap\Exception\InvalidStringException;
 use HillValley\Fluxcap\TimeZone;
-use HillValley\Fluxcap\Weekday;
 use PHPUnit\Framework\TestCase;
 use function ini_get;
 
@@ -23,7 +22,7 @@ final class TimeZoneTest extends TestCase
 
     public function testConstruct(): void
     {
-        $method = new \ReflectionMethod(Weekday::class, '__construct');
+        $method = new \ReflectionMethod(TimeZone::class, '__construct');
 
         self::assertTrue($method->isPrivate());
     }

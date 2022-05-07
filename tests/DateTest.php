@@ -617,40 +617,36 @@ final class DateTest extends TestCase
     }
 
     /** @dataProvider dataToMonth */
-    public function testToMonth(int $expected, string $date): void
+    public function testToMonth(Month $expected, string $date): void
     {
         $date = Date::fromString($date);
-        $month = $date->toMonth();
 
-        self::assertInstanceOf(Month::class, $month);
-        self::assertSame($expected, $month->getIndex());
+        self::assertSame($expected, $date->toMonth());
     }
 
     public function dataToMonth(): iterable
     {
         return [
-            [Month::MARCH, '2019-03-12'],
-            [Month::FEBRUARY, '2020-02-29'],
-            [Month::JULY, '2020-07-01'],
+            [Month::March, '2019-03-12'],
+            [Month::February, '2020-02-29'],
+            [Month::July, '2020-07-01'],
         ];
     }
 
     /** @dataProvider dataToWeekday */
-    public function testToWeekday(int $expected, string $date): void
+    public function testToWeekday(Weekday $expected, string $date): void
     {
         $date = Date::fromString($date);
-        $weekday = $date->toWeekday();
 
-        self::assertInstanceOf(Weekday::class, $weekday);
-        self::assertSame($expected, $weekday->getIndex());
+        self::assertSame($expected, $date->toWeekday());
     }
 
     public function dataToWeekday(): iterable
     {
         return [
-            [Weekday::MONDAY, '2019-07-15'],
-            [Weekday::THURSDAY, '2020-12-31'],
-            [Weekday::SUNDAY, '2021-01-03'],
+            [Weekday::Monday, '2019-07-15'],
+            [Weekday::Thursday, '2020-12-31'],
+            [Weekday::Sunday, '2021-01-03'],
         ];
     }
 
@@ -665,9 +661,9 @@ final class DateTest extends TestCase
     public function dataToPrevWeekday(): iterable
     {
         return [
-            ['2019-07-15', '2019-07-15', Weekday::MONDAY],
-            ['2019-07-14', '2019-07-15', Weekday::sunday()],
-            ['2020-12-26', '2021-01-01', Weekday::SATURDAY],
+            ['2019-07-15', '2019-07-15', Weekday::Monday],
+            ['2019-07-14', '2019-07-15', Weekday::Sunday],
+            ['2020-12-26', '2021-01-01', Weekday::Saturday],
         ];
     }
 
@@ -682,9 +678,9 @@ final class DateTest extends TestCase
     public function dataToNextWeekday(): iterable
     {
         return [
-            ['2019-07-14', '2019-07-14', Weekday::SUNDAY],
-            ['2019-07-15', '2019-07-14', Weekday::monday()],
-            ['2021-01-01', '2020-12-26', Weekday::FRIDAY],
+            ['2019-07-14', '2019-07-14', Weekday::Sunday],
+            ['2019-07-15', '2019-07-14', Weekday::Monday],
+            ['2021-01-01', '2020-12-26', Weekday::Friday],
         ];
     }
 
