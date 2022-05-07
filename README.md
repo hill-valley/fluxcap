@@ -6,7 +6,7 @@ This package contains:
 - immutable classes `DateTime`, `Date` and `Time` (wrapping `\DateTimeImmutable`)
 - immutable class `TimeZone` (wrapping `\DateTimeZone`)
 - immutable class `Duration` (wrapping `\DateInterval`)
-- enums `Month` and `WeekdayOld`
+- enums `Month` and `Weekday`
   
 [![Latest release](https://img.shields.io/github/v/release/hill-valley/fluxcap?sort=semver&style=flat-square)](https://github.com/hill-valley/fluxcap/releases)
 ![PHP version requirement](https://img.shields.io/packagist/php-v/hill-valley/fluxcap?style=flat-square)

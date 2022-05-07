@@ -48,6 +48,7 @@ return (new PhpCsFixer\Config())
         'no_superfluous_phpdoc_tags' => ['allow_mixed' => true],
         'ordered_class_elements' => ['order' => [
             'use_trait',
+            'case',
             'constant_public',
             'constant_protected',
             'constant_private',
