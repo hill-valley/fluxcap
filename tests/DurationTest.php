@@ -421,7 +421,7 @@ final class DurationTest extends TestCase
         return [
             ['+ 2 months, 02h, 0min, 1sec, 123ms', 'P1Y2M3DT2H1.000123S', '%R %m months, %Hh, %imin, %ssec, %fms'],
             ['- 3 days', '-P3D', '%r %d days'],
-            //['-2.034500', 'PT-2.0345S', '%s.%F'],
+            // ['-2.034500', 'PT-2.0345S', '%s.%F'],
         ];
     }
 

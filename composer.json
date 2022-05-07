@@ -18,9 +18,9 @@
 
     "require-dev": {
         "ext-intl": "*",
-        "friendsofphp/php-cs-fixer": "^3.4",
+        "friendsofphp/php-cs-fixer": "^3.8",
         "phpunit/phpunit": "^9.5",
-        "vimeo/psalm": "^4.17"
+        "vimeo/psalm": "^4.23"
     },
 
     "suggest": {
