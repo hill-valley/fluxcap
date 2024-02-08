@@ -1089,12 +1089,8 @@ final class DateTimeTest extends TestCase
     }
 
     /** @dataProvider dataDiff */
-    public function testDiff(string $expected, DateTime $dateTime, DateTime $other, bool $skipPhp81 = false, ...$parameters): void
+    public function testDiff(string $expected, DateTime $dateTime, DateTime $other, ...$parameters): void
     {
-        if ($skipPhp81 && PHP_VERSION_ID >= 8_01_00) {
-            self::markTestSkipped('See https://bugs.php.net/81263');
-        }
-
         $duration = $dateTime->diff($other, ...$parameters);
 
         self::assertInstanceOf(Duration::class, $duration);
@@ -1105,11 +1101,11 @@ final class DateTimeTest extends TestCase
     {
         return [
             ['PT0S', DateTime::fromString('2020-07-19 18:30:00'), DateTime::fromString('2020-07-19 18:30:00')],
-            ['PT0S', DateTime::fromString('2020-07-19 18:30:00'), DateTime::utcFromString('2020-07-19 16:30:00'), true],
+            ['PT0S', DateTime::fromString('2020-07-19 18:30:00'), DateTime::utcFromString('2020-07-19 16:30:00')],
             ['P1Y3DT5H29M59.876544S', DateTime::fromString('2020-07-19 18:30:00.123456'), DateTime::fromString('2021-07-23 00:00:00')],
             ['-P1DT23H', DateTime::fromString('2020-07-19 18:30:00'), DateTime::fromString('2020-07-17 19:30:00')],
-            ['P1DT23H', DateTime::fromString('2020-07-19 18:30:00'), DateTime::fromString('2020-07-17 19:30:00'), false, true],
-            ['-PT1H', DateTime::utcFromString('2020-07-19 17:30'), DateTime::fromString('2020-07-19 18:30'), true, false],
+            ['P1DT23H', DateTime::fromString('2020-07-19 18:30:00'), DateTime::fromString('2020-07-17 19:30:00'), true],
+            ['-PT1H', DateTime::utcFromString('2020-07-19 17:30'), DateTime::fromString('2020-07-19 18:30'), false],
         ];
     }
 

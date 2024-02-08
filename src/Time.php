@@ -86,7 +86,10 @@ final class Time implements \JsonSerializable, \Stringable
 
         $time = "$hour:$minute:$second.".sprintf('%06d', $microsecond);
 
-        return new self(new \DateTimeImmutable(self::DATE.' '.$time, TimeZone::utc()->toNative()));
+        /** @psalm-suppress ImpureMethodCall */
+        $dateTime = new \DateTimeImmutable(self::DATE.' '.$time, TimeZone::utc()->toNative());
+
+        return new self($dateTime);
     }
 
     /** @psalm-mutation-free */
