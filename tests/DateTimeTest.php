@@ -1159,6 +1159,14 @@ final class DateTimeTest extends TestCase
         ];
     }
 
+    public function testModifyInvalid(): void
+    {
+        $this->expectException(InvalidStringException::class);
+        $this->expectExceptionMessage('Failed to parse time string (foo) at position 0 (f): The timezone could not be found in the database.');
+
+        DateTime::fromString('2024-02-09')->modify('foo');
+    }
+
     /** @dataProvider dataAdd */
     public function testAdd(string $expected, string $duration): void
     {
