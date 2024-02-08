@@ -539,7 +539,7 @@ final class TimeTest extends TestCase
 
         self::assertThat($time->format('H:i:s'), self::logicalOr(
             self::identicalTo(date('H:i:s', $now - 1)),
-            self::identicalTo(date('H:i:s', $now))
+            self::identicalTo(date('H:i:s', $now)),
         ));
     }
 }

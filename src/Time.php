@@ -9,6 +9,7 @@ use HillValley\Fluxcap\Exception\FormatMismatchException;
 use HillValley\Fluxcap\Exception\InvalidPartException;
 use HillValley\Fluxcap\Exception\InvalidStringException;
 use HillValley\Fluxcap\Exception\MissingIntlExtensionException;
+
 use function is_int;
 
 /**

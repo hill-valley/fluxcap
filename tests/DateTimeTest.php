@@ -15,7 +15,6 @@ use HillValley\Fluxcap\Time;
 use HillValley\Fluxcap\TimeZone;
 use HillValley\Fluxcap\Weekday;
 use PHPUnit\Framework\TestCase;
-use const PHP_VERSION_ID;
 
 /**
  * @internal
@@ -1221,7 +1220,7 @@ final class DateTimeTest extends TestCase
 
         self::assertThat($dateTime->format('Y-m-d H:i:s'), self::logicalOr(
             self::identicalTo($now->modify('-1sec')->format('Y-m-d H:i:s')),
-            self::identicalTo($now->format('Y-m-d H:i:s'))
+            self::identicalTo($now->format('Y-m-d H:i:s')),
         ));
 
         self::assertSame($expectedTimeZone, $dateTime->getTimeZone()->getName());
