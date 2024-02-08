@@ -6,46 +6,33 @@ return (new PhpCsFixer\Config())
     ->setUsingCache(true)
     ->setRiskyAllowed(true)
     ->setRules([
-        '@PhpCsFixer' => true,
-        '@PhpCsFixer:risky' => true,
+        '@PER-CS2.0' => true,
+        '@PER-CS2.0:risky' => true,
+        '@Symfony' => true,
+        '@Symfony:risky' => true,
         '@PHP81Migration' => true,
         '@PHP80Migration:risky' => true,
         '@PHPUnit84Migration:risky' => true,
 
-        'blank_line_before_statement' => ['statements' => [
-            'break',
-            'continue',
-            'declare',
-            'return',
-            'throw',
-        ]],
-        'braces' => ['allow_single_line_closure' => false],
-        'comment_to_phpdoc' => false,
-        'explicit_string_variable' => false,
+        'array_indentation' => true,
+        'declare_strict_types' => true,
         'final_class' => true,
         'global_namespace_import' => [
             'import_constants' => true,
             'import_functions' => true,
             'import_classes' => false,
         ],
-        'list_syntax' => ['syntax' => 'short'],
-        'no_extra_blank_lines' => [
-            'tokens' => [
-                'break',
-                // 'case',
-                'continue',
-                'curly_brace_block',
-                'default',
-                'extra',
-                'parenthesis_brace_block',
-                'return',
-                'square_brace_block',
-                'switch',
-                'throw',
-                'use',
-            ],
+        'heredoc_to_nowdoc' => true,
+        'method_argument_space' => ['on_multiline' => 'ignore'],
+        'multiline_comment_opening_closing' => true,
+        'no_superfluous_elseif' => true,
+        'no_superfluous_phpdoc_tags' => [
+            'allow_mixed' => true,
+            'remove_inheritdoc' => true,
         ],
-        'no_superfluous_phpdoc_tags' => ['allow_mixed' => true],
+        'no_useless_else' => true,
+        'no_useless_return' => true,
+        'nullable_type_declaration_for_default_null_value' => true,
         'ordered_class_elements' => ['order' => [
             'use_trait',
             'case',
@@ -67,22 +54,29 @@ return (new PhpCsFixer\Config())
         ]],
         'ordered_imports' => ['imports_order' => [
             'class',
-            'const',
             'function',
+            'const',
         ]],
-        'php_unit_test_case_static_method_calls' => ['call_type' => 'self'],
-        'phpdoc_add_missing_param_annotation' => false,
-        'phpdoc_align' => false,
+        'phpdoc_align' => ['align' => 'left'],
+        'phpdoc_order' => true,
+        'phpdoc_separation' => false,
         'phpdoc_to_comment' => false,
-        'phpdoc_types_order' => [
-            'sort_algorithm' => 'none',
-            'null_adjustment' => 'always_last',
+        'single_line_empty_body' => true,
+        'single_line_throw' => false,
+        'strict_comparison' => true,
+        'strict_param' => true,
+        'string_implicit_backslashes' => ['single_quoted' => 'ignore'],
+        'trailing_comma_in_multiline' => [
+            'after_heredoc' => true,
+            'elements' => ['arrays', 'parameters', 'match', 'arguments'],
         ],
+        'use_arrow_functions' => false,
+        'void_return' => false,
     ])
     ->setFinder(
         (new PhpCsFixer\Finder())
             ->in(__DIR__.'/src')
             ->in(__DIR__.'/tests')
-            ->append([__FILE__])
+            ->append([__FILE__]),
     )
 ;

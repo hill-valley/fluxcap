@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace HillValley\Fluxcap;
 
 use HillValley\Fluxcap\Exception\InvalidStringException;
+
 use function is_int;
 
 /**
