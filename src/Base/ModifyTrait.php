@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace HillValley\Fluxcap\Base;
 
 use HillValley\Fluxcap\Duration;
+use HillValley\Fluxcap\Exception\InvalidStringException;
 
 /**
  * @internal
@@ -16,7 +17,17 @@ trait ModifyTrait
 
     public function modify(string $modify): self
     {
-        return self::fromNative($this->dateTime->modify($modify));
+        try {
+            $dateTime = @$this->dateTime->modify($modify);
+        } catch (\Exception $exception) { // @codeCoverageIgnore
+            throw InvalidStringException::wrap($exception, 'DateTimeImmutable::modify(): '); // @codeCoverageIgnore
+        }
+
+        if (false === $dateTime) {
+            throw InvalidStringException::create('Failed to parse time string ('.$modify.')');
+        }
+
+        return self::fromNative($dateTime);
     }
 
     public function add(Duration $duration): self

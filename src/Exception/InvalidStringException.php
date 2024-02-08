@@ -20,12 +20,12 @@ final class InvalidStringException extends \DomainException implements Exception
     }
 
     /** @internal */
-    public static function wrap(\Exception $exception): self
+    public static function wrap(\Exception $exception, string $prefix = 'DateTimeImmutable::__construct(): '): self
     {
         $message = $exception->getMessage();
 
-        if (str_starts_with($message, $needle = 'DateTimeImmutable::__construct(): ')) {
-            $message = substr($message, strlen($needle));
+        if (str_starts_with($message, $prefix)) {
+            $message = substr($message, strlen($prefix));
         }
 
         $message = rtrim($message, '.').'.';
