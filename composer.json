@@ -18,9 +18,9 @@
 
     "require-dev": {
         "ext-intl": "*",
-        "friendsofphp/php-cs-fixer": "^3.8",
-        "phpunit/phpunit": "^9.5",
-        "vimeo/psalm": "^4.23"
+        "friendsofphp/php-cs-fixer": "^3.49",
+        "phpunit/phpunit": "^9.6",
+        "vimeo/psalm": "^4.30"
     },
 
     "suggest": {
@@ -39,10 +39,7 @@
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true,
-        "allow-plugins": {
-            "composer/package-versions-deprecated": true
-        }
+        "sort-packages": true
     },
 
     "scripts": {
