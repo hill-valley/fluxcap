@@ -4,25 +4,28 @@ declare(strict_types=1);
 
 namespace HillValley\Fluxcap\Tests;
 
+use HillValley\Fluxcap\Base\IntlFormatter;
 use HillValley\Fluxcap\Date;
 use HillValley\Fluxcap\DateTime;
 use HillValley\Fluxcap\Weekday;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
- * @covers \HillValley\Fluxcap\Base\IntlFormatter
- * @covers \HillValley\Fluxcap\Weekday
  */
+#[CoversClass(IntlFormatter::class)]
+#[CoversClass(Weekday::class)]
 final class WeekdayTest extends TestCase
 {
-    /** @dataProvider dataCast */
+    #[DataProvider('dataCast')]
     public function testCast(Weekday $expected, $weekday): void
     {
         self::assertSame($expected, Weekday::cast($weekday));
     }
 
-    public function dataCast(): iterable
+    public static function dataCast(): iterable
     {
         return [
             [Weekday::Wednesday, 3],
@@ -74,13 +77,13 @@ final class WeekdayTest extends TestCase
         self::assertSame('Sa', Weekday::Saturday->getIntlAbbreviation());
     }
 
-    /** @dataProvider dataDiffToPrev */
+    #[DataProvider('dataDiffToPrev')]
     public function testDiffToPrev(int $expected, Weekday $weekday, Weekday $prev): void
     {
         self::assertSame($expected, $weekday->diffToPrev($prev));
     }
 
-    public function dataDiffToPrev(): iterable
+    public static function dataDiffToPrev(): iterable
     {
         return [
             [1, Weekday::Wednesday, Weekday::Tuesday],
@@ -90,13 +93,13 @@ final class WeekdayTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataDiffToNext */
+    #[DataProvider('dataDiffToNext')]
     public function testDiffToNext(int $expected, Weekday $weekday, Weekday $next): void
     {
         self::assertSame($expected, $weekday->diffToNext($next));
     }
 
-    public function dataDiffToNext(): iterable
+    public static function dataDiffToNext(): iterable
     {
         return [
             [1, Weekday::Tuesday, Weekday::Wednesday],

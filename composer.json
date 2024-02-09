@@ -19,7 +19,7 @@
     "require-dev": {
         "ext-intl": "*",
         "friendsofphp/php-cs-fixer": "^3.49",
-        "phpunit/phpunit": "^9.6",
+        "phpunit/phpunit": "^10.5",
         "vimeo/psalm": "^5.21"
     },
 
@@ -45,8 +45,8 @@
     "scripts": {
         "cs": "php-cs-fixer fix -v",
         "phpunit": "phpunit",
-        "phpunit-coverage": "phpdbg -qrr vendor/bin/phpunit --coverage-text",
-        "phpunit-coverage-html": "phpdbg -qrr vendor/bin/phpunit --coverage-html .build/coverage-html",
+        "phpunit-coverage": "phpunit --coverage-text",
+        "phpunit-coverage-html": "phpunit --coverage-html .build/coverage-html",
         "psalm": "psalm",
 
         "check": [

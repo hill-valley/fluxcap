@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace HillValley\Fluxcap\Tests;
 
+use HillValley\Fluxcap\Base\IntlFormatter;
 use HillValley\Fluxcap\Date;
 use HillValley\Fluxcap\DateTime;
 use HillValley\Fluxcap\Month;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,15 +17,17 @@ use PHPUnit\Framework\TestCase;
  * @covers \HillValley\Fluxcap\Base\IntlFormatter
  * @covers \HillValley\Fluxcap\Month
  */
+#[CoversClass(IntlFormatter::class)]
+#[CoversClass(Month::class)]
 final class MonthTest extends TestCase
 {
-    /** @dataProvider dataCast */
+    #[DataProvider('dataCast')]
     public function testCast(Month $exptected, $month): void
     {
         self::assertSame($exptected, Month::cast($month));
     }
 
-    public function dataCast(): iterable
+    public static function dataCast(): iterable
     {
         return [
             [Month::April, 4],
@@ -79,13 +84,13 @@ final class MonthTest extends TestCase
         self::assertSame('Okt', Month::October->getIntlAbbreviation());
     }
 
-    /** @dataProvider dataDiffToPrev */
+    #[DataProvider('dataDiffToPrev')]
     public function testDiffToPrev(int $expected, Month $month, Month $prev): void
     {
         self::assertSame($expected, $month->diffToPrev($prev));
     }
 
-    public function dataDiffToPrev(): iterable
+    public static function dataDiffToPrev(): iterable
     {
         return [
             [1, Month::April, Month::March],
@@ -95,13 +100,13 @@ final class MonthTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataDiffToNext */
+    #[DataProvider('dataDiffToNext')]
     public function testDiffToNext(int $expected, Month $month, Month $next): void
     {
         self::assertSame($expected, $month->diffToNext($next));
     }
 
-    public function dataDiffToNext(): iterable
+    public static function dataDiffToNext(): iterable
     {
         return [
             [1, Month::March, Month::April],
