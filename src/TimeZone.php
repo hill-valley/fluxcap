@@ -139,7 +139,7 @@ final class TimeZone implements \JsonSerializable, \Stringable
     }
 
     /**
-     * @param array{name: string} $data
+     * @param array{name: non-empty-string} $data
      */
     public function __unserialize(array $data): void
     {
