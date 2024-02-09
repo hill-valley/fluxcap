@@ -9,12 +9,14 @@ use HillValley\Fluxcap\DateTime;
 use HillValley\Fluxcap\Duration;
 use HillValley\Fluxcap\Exception\InvalidStringException;
 use HillValley\Fluxcap\TimeZone;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
- * @covers \HillValley\Fluxcap\Duration
  */
+#[CoversClass(Duration::class)]
 final class DurationTest extends TestCase
 {
     public function testConstruct(): void
@@ -24,13 +26,13 @@ final class DurationTest extends TestCase
         self::assertTrue($method->isPrivate());
     }
 
-    /** @dataProvider dataFromString */
+    #[DataProvider('dataFromString')]
     public function testFromString(string $expected, ?string $duration = null): void
     {
         static::assertDuration($expected, Duration::fromString($duration ?? $expected));
     }
 
-    public function dataFromString(): iterable
+    public static function dataFromString(): iterable
     {
         return [
             ['PT0S', 'P0D'],
@@ -59,13 +61,13 @@ final class DurationTest extends TestCase
         self::assertDuration('-P2M10DT-2H1.0234S', $duration);
     }
 
-    /** @dataProvider dataFromNative */
+    #[DataProvider('dataFromNative')]
     public function testFromNative(string $expected, \DateInterval $interval): void
     {
         static::assertDuration($expected, Duration::fromNative($interval));
     }
 
-    public function dataFromNative(): iterable
+    public static function dataFromNative(): iterable
     {
         yield ['P1DT20M', new \DateInterval('P1DT20M')];
 
@@ -88,13 +90,13 @@ final class DurationTest extends TestCase
         static::assertDuration('P1D', $duration);
     }
 
-    /** @dataProvider dataCast */
+    #[DataProvider('dataCast')]
     public function testCast(string $expected, $duration): void
     {
         static::assertDuration($expected, Duration::cast($duration));
     }
 
-    public function dataCast(): iterable
+    public static function dataCast(): iterable
     {
         return [
             ['P1DT20M', Duration::fromString('P1DT20M')],
@@ -103,13 +105,13 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataYears */
+    #[DataProvider('dataYears')]
     public function testYears(string $expected, int $years): void
     {
         static::assertDuration($expected, Duration::years($years));
     }
 
-    public function dataYears(): iterable
+    public static function dataYears(): iterable
     {
         return [
             ['P-2Y', -2],
@@ -118,13 +120,13 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataMonths */
+    #[DataProvider('dataMonths')]
     public function testMonths(string $expected, int $months): void
     {
         static::assertDuration($expected, Duration::months($months));
     }
 
-    public function dataMonths(): iterable
+    public static function dataMonths(): iterable
     {
         return [
             ['P-2M', -2],
@@ -133,13 +135,13 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataWeeks */
+    #[DataProvider('dataWeeks')]
     public function testWeeks(string $expected, int $weeks): void
     {
         static::assertDuration($expected, Duration::weeks($weeks));
     }
 
-    public function dataWeeks(): iterable
+    public static function dataWeeks(): iterable
     {
         return [
             ['P-14D', -2],
@@ -148,13 +150,13 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataDays */
+    #[DataProvider('dataDays')]
     public function testDays(string $expected, int $days): void
     {
         static::assertDuration($expected, Duration::days($days));
     }
 
-    public function dataDays(): iterable
+    public static function dataDays(): iterable
     {
         return [
             ['P-2D', -2],
@@ -163,13 +165,13 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataHours */
+    #[DataProvider('dataHours')]
     public function testHours(string $expected, int $hours): void
     {
         static::assertDuration($expected, Duration::hours($hours));
     }
 
-    public function dataHours(): iterable
+    public static function dataHours(): iterable
     {
         return [
             ['PT-2H', -2],
@@ -178,13 +180,13 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataMinutes */
+    #[DataProvider('dataMinutes')]
     public function testMinutes(string $expected, int $minutes): void
     {
         static::assertDuration($expected, Duration::minutes($minutes));
     }
 
-    public function dataMinutes(): iterable
+    public static function dataMinutes(): iterable
     {
         return [
             ['PT-2M', -2],
@@ -193,13 +195,13 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSeconds */
+    #[DataProvider('dataSeconds')]
     public function testSeconds(string $expected, int $seconds): void
     {
         static::assertDuration($expected, Duration::seconds($seconds));
     }
 
-    public function dataSeconds(): iterable
+    public static function dataSeconds(): iterable
     {
         return [
             ['PT-2S', -2],
@@ -208,7 +210,7 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetYears */
+    #[DataProvider('dataGetYears')]
     public function testGetYears(int $expected, string $duration): void
     {
         $duration = Duration::fromString($duration);
@@ -216,7 +218,7 @@ final class DurationTest extends TestCase
         self::assertSame($expected, $duration->getYears());
     }
 
-    public function dataGetYears(): iterable
+    public static function dataGetYears(): iterable
     {
         return [
             [0, 'P6MT3M'],
@@ -226,7 +228,7 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetMonths */
+    #[DataProvider('dataGetMonths')]
     public function testGetMonths(int $expected, string $duration): void
     {
         $duration = Duration::fromString($duration);
@@ -234,7 +236,7 @@ final class DurationTest extends TestCase
         self::assertSame($expected, $duration->getMonths());
     }
 
-    public function dataGetMonths(): iterable
+    public static function dataGetMonths(): iterable
     {
         return [
             [0, 'P6YT3M'],
@@ -244,7 +246,7 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetDays */
+    #[DataProvider('dataGetDays')]
     public function testGetDays(int $expected, string $duration): void
     {
         $duration = Duration::fromString($duration);
@@ -252,7 +254,7 @@ final class DurationTest extends TestCase
         self::assertSame($expected, $duration->getDays());
     }
 
-    public function dataGetDays(): iterable
+    public static function dataGetDays(): iterable
     {
         return [
             [0, 'P6YT3M'],
@@ -262,7 +264,7 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetHours */
+    #[DataProvider('dataGetHours')]
     public function testGetHours(int $expected, string $duration): void
     {
         $duration = Duration::fromString($duration);
@@ -270,7 +272,7 @@ final class DurationTest extends TestCase
         self::assertSame($expected, $duration->getHours());
     }
 
-    public function dataGetHours(): iterable
+    public static function dataGetHours(): iterable
     {
         return [
             [0, 'P2YT3M'],
@@ -280,7 +282,7 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetMinutes */
+    #[DataProvider('dataGetMinutes')]
     public function testGetMinutes(int $expected, string $duration): void
     {
         $duration = Duration::fromString($duration);
@@ -288,7 +290,7 @@ final class DurationTest extends TestCase
         self::assertSame($expected, $duration->getMinutes());
     }
 
-    public function dataGetMinutes(): iterable
+    public static function dataGetMinutes(): iterable
     {
         return [
             [0, 'P2YT3H'],
@@ -298,7 +300,7 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetSeconds */
+    #[DataProvider('dataGetSeconds')]
     public function testGetSeconds(int $expected, string $duration): void
     {
         $duration = Duration::fromString($duration);
@@ -306,7 +308,7 @@ final class DurationTest extends TestCase
         self::assertSame($expected, $duration->getSeconds());
     }
 
-    public function dataGetSeconds(): iterable
+    public static function dataGetSeconds(): iterable
     {
         return [
             [0, 'P2YT3H'],
@@ -317,7 +319,7 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetMicroseconds */
+    #[DataProvider('dataGetMicroseconds')]
     public function testGetMicroseconds(int $expected, string $duration): void
     {
         $duration = Duration::fromString($duration);
@@ -325,7 +327,7 @@ final class DurationTest extends TestCase
         self::assertSame($expected, $duration->getMicroseconds());
     }
 
-    public function dataGetMicroseconds(): iterable
+    public static function dataGetMicroseconds(): iterable
     {
         return [
             [0, 'P2YT3H'],
@@ -337,7 +339,7 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetTotalMonths */
+    #[DataProvider('dataGetTotalMonths')]
     public function testGetTotalMonths(int $expected, string $duration): void
     {
         $duration = Duration::fromString($duration);
@@ -345,7 +347,7 @@ final class DurationTest extends TestCase
         self::assertSame($expected, $duration->getTotalMonths());
     }
 
-    public function dataGetTotalMonths(): iterable
+    public static function dataGetTotalMonths(): iterable
     {
         return [
             [0, 'P40DT3H'],
@@ -357,13 +359,13 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetTotalDays */
+    #[DataProvider('dataGetTotalDays')]
     public function testGetTotalDays(?int $expected, Duration $duration): void
     {
         self::assertSame($expected, $duration->getTotalDays());
     }
 
-    public function dataGetTotalDays(): iterable
+    public static function dataGetTotalDays(): iterable
     {
         return [
             [null, Duration::fromString('P4D')],
@@ -372,13 +374,13 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsInverted */
+    #[DataProvider('dataIsInverted')]
     public function testIsInverted(bool $expected, Duration $duration): void
     {
         self::assertSame($expected, $duration->isInverted());
     }
 
-    public function dataIsInverted(): iterable
+    public static function dataIsInverted(): iterable
     {
         return [
             [false, Duration::fromString('P4D')],
@@ -389,13 +391,13 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsZero */
+    #[DataProvider('dataIsZero')]
     public function testIsZero(bool $expected, Duration $duration): void
     {
         self::assertSame($expected, $duration->isZero());
     }
 
-    public function dataIsZero(): iterable
+    public static function dataIsZero(): iterable
     {
         return [
             [false, Duration::fromString('P4D')],
@@ -408,7 +410,7 @@ final class DurationTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFormat */
+    #[DataProvider('dataFormat')]
     public function testFormat(string $expected, string $duration, string $format): void
     {
         $duration = Duration::fromString($duration);
@@ -416,7 +418,7 @@ final class DurationTest extends TestCase
         self::assertSame($expected, $duration->format($format));
     }
 
-    public function dataFormat(): iterable
+    public static function dataFormat(): iterable
     {
         return [
             ['+ 2 months, 02h, 0min, 1sec, 123ms', 'P1Y2M3DT2H1.000123S', '%R %m months, %Hh, %imin, %ssec, %fms'],
@@ -455,7 +457,7 @@ final class DurationTest extends TestCase
         self::assertJsonStringEqualsJsonString('"P1DT2H"', json_encode($duration));
     }
 
-    /** @dataProvider dataSerialization */
+    #[DataProvider('dataSerialization')]
     public function testSerialization(Duration $duration): void
     {
         $duration2 = unserialize(serialize($duration));
@@ -464,7 +466,7 @@ final class DurationTest extends TestCase
         self::assertSame($duration->getTotalDays(), $duration2->getTotalDays());
     }
 
-    public function dataSerialization(): iterable
+    public static function dataSerialization(): iterable
     {
         return [
             [Duration::fromString('P2YT3H')],

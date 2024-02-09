@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace HillValley\Fluxcap\Tests\Base;
 
 use HillValley\Fluxcap\Base\IntlFormatter;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
- * @covers \HillValley\Fluxcap\Base\IntlFormatter
  */
+#[CoversClass(IntlFormatter::class)]
 final class IntlFormatterTest extends TestCase
 {
     protected function tearDown(): void
@@ -18,7 +20,7 @@ final class IntlFormatterTest extends TestCase
         \Locale::setDefault('de-DE');
     }
 
-    /** @dataProvider dataFormatDateTime */
+    #[DataProvider('dataFormatDateTime')]
     public function testFormatDateTime(string $expected, string $dateTime, string $locale, int $dateFormat, int $timeFormat = \IntlDateFormatter::NONE): void
     {
         \Locale::setDefault($locale);
@@ -27,7 +29,7 @@ final class IntlFormatterTest extends TestCase
         self::assertSame($expected, IntlFormatter::formatDateTime($dateTime, $dateFormat, $timeFormat));
     }
 
-    public function dataFormatDateTime(): iterable
+    public static function dataFormatDateTime(): iterable
     {
         return [
             ['03/09/2020', '2020-09-03', 'en-GB', \IntlDateFormatter::SHORT],

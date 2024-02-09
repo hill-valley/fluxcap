@@ -12,7 +12,7 @@ return (new PhpCsFixer\Config())
         '@Symfony:risky' => true,
         '@PHP81Migration' => true,
         '@PHP80Migration:risky' => true,
-        '@PHPUnit84Migration:risky' => true,
+        '@PHPUnit100Migration:risky' => true,
 
         'array_indentation' => true,
         'declare_strict_types' => true,

@@ -6,14 +6,16 @@ namespace HillValley\Fluxcap\Tests;
 
 use HillValley\Fluxcap\Exception\InvalidStringException;
 use HillValley\Fluxcap\TimeZone;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 use function ini_get;
 
 /**
  * @internal
- * @covers \HillValley\Fluxcap\TimeZone
  */
+#[CoversClass(TimeZone::class)]
 final class TimeZoneTest extends TestCase
 {
     protected function tearDown(): void
@@ -50,13 +52,13 @@ final class TimeZoneTest extends TestCase
         self::assertSame($timeZone, TimeZone::utc());
     }
 
-    /** @dataProvider dataFromString */
+    #[DataProvider('dataFromString')]
     public function testFromString(string $timeZone): void
     {
         $this->assertTimeZone($timeZone, TimeZone::fromString($timeZone));
     }
 
-    public function dataFromString(): iterable
+    public static function dataFromString(): iterable
     {
         return [
             ['UTC'],
@@ -65,7 +67,7 @@ final class TimeZoneTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFromStringInvalid */
+    #[DataProvider('dataFromStringInvalid')]
     public function testFromStringInvalid(string $expected, string $timeZone): void
     {
         $this->expectException(InvalidStringException::class);
@@ -74,7 +76,7 @@ final class TimeZoneTest extends TestCase
         TimeZone::fromString($timeZone);
     }
 
-    public function dataFromStringInvalid(): iterable
+    public static function dataFromStringInvalid(): iterable
     {
         return [
             ['The time zone string can not be empty.', ''],
@@ -82,13 +84,13 @@ final class TimeZoneTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFromNative */
+    #[DataProvider('dataFromNative')]
     public function testFromNative(string $expected, \DateTimeZone $timeZone): void
     {
         $this->assertTimeZone($expected, TimeZone::fromNative($timeZone));
     }
 
-    public function dataFromNative(): iterable
+    public static function dataFromNative(): iterable
     {
         return [
             ['UTC', new \DateTimeZone('UTC')],
@@ -97,13 +99,13 @@ final class TimeZoneTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataCast */
+    #[DataProvider('dataCast')]
     public function testCast(string $expected, $timeZone): void
     {
         $this->assertTimeZone($expected, TimeZone::cast($timeZone));
     }
 
-    public function dataCast(): iterable
+    public static function dataCast(): iterable
     {
         return [
             ['Europe/Paris', 'Europe/Paris'],
@@ -112,7 +114,7 @@ final class TimeZoneTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataEquals */
+    #[DataProvider('dataEquals')]
     public function testEquals(bool $expected, string $timeZone1, string $timeZone2): void
     {
         $timeZone1 = TimeZone::fromString($timeZone1);
@@ -121,7 +123,7 @@ final class TimeZoneTest extends TestCase
         self::assertSame($expected, $timeZone1->equals($timeZone2));
     }
 
-    public function dataEquals(): iterable
+    public static function dataEquals(): iterable
     {
         return [
             [false, 'UTC', 'Europe/Berlin'],
@@ -149,7 +151,7 @@ final class TimeZoneTest extends TestCase
         self::assertTrue($timeZone2->isDefault());
     }
 
-    /** @dataProvider dataIsUtc */
+    #[DataProvider('dataIsUtc')]
     public function testIsUtc(bool $expected, string $timeZone): void
     {
         $timeZone = TimeZone::fromString($timeZone);
@@ -157,7 +159,7 @@ final class TimeZoneTest extends TestCase
         self::assertSame($expected, $timeZone->isUtc());
     }
 
-    public function dataIsUtc(): iterable
+    public static function dataIsUtc(): iterable
     {
         return [
             [true, 'UTC'],

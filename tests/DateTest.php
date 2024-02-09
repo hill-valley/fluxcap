@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace HillValley\Fluxcap\Tests;
 
+use HillValley\Fluxcap\Base\IntlFormatter;
 use HillValley\Fluxcap\Date;
 use HillValley\Fluxcap\DateTime;
 use HillValley\Fluxcap\Duration;
@@ -13,13 +14,15 @@ use HillValley\Fluxcap\Exception\InvalidStringException;
 use HillValley\Fluxcap\Month;
 use HillValley\Fluxcap\TimeZone;
 use HillValley\Fluxcap\Weekday;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
- * @covers \HillValley\Fluxcap\Base\IntlFormatter
- * @covers \HillValley\Fluxcap\Date
  */
+#[CoversClass(IntlFormatter::class)]
+#[CoversClass(Date::class)]
 final class DateTest extends TestCase
 {
     public function testConstruct(): void
@@ -29,7 +32,7 @@ final class DateTest extends TestCase
         self::assertTrue($method->isPrivate());
     }
 
-    /** @dataProvider dataTimeZones */
+    #[DataProvider('dataTimeZones')]
     public function testToday(string $expectedTimezone, ...$parameters): void
     {
         $expected = new \DateTimeImmutable('today', new \DateTimeZone($expectedTimezone));
@@ -37,7 +40,7 @@ final class DateTest extends TestCase
         self::assertDate($expected->format('Y-m-d'), Date::today(...$parameters));
     }
 
-    /** @dataProvider dataTimeZones */
+    #[DataProvider('dataTimeZones')]
     public function testYesterday(string $expectedTimezone, ...$parameters): void
     {
         $expected = new \DateTimeImmutable('yesterday', new \DateTimeZone($expectedTimezone));
@@ -45,7 +48,7 @@ final class DateTest extends TestCase
         self::assertDate($expected->format('Y-m-d'), Date::yesterday(...$parameters));
     }
 
-    /** @dataProvider dataTimeZones */
+    #[DataProvider('dataTimeZones')]
     public function testTomorrow(string $expectedTimezone, ...$parameters): void
     {
         $expected = new \DateTimeImmutable('tomorrow', new \DateTimeZone($expectedTimezone));
@@ -53,7 +56,7 @@ final class DateTest extends TestCase
         self::assertDate($expected->format('Y-m-d'), Date::tomorrow(...$parameters));
     }
 
-    public function dataTimeZones(): iterable
+    public static function dataTimeZones(): iterable
     {
         return [
             ['Europe/Berlin'],
@@ -63,13 +66,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFromString */
+    #[DataProvider('dataFromString')]
     public function testFromString(string $expected, string $date): void
     {
         self::assertDate($expected, Date::fromString($date));
     }
 
-    public function dataFromString(): iterable
+    public static function dataFromString(): iterable
     {
         return [
             [date('Y-m-d'), 'now'],
@@ -81,7 +84,7 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFromStringInvalid */
+    #[DataProvider('dataFromStringInvalid')]
     public function testFromStringInvalid(string $expected, string $date): void
     {
         $this->expectException(InvalidStringException::class);
@@ -90,7 +93,7 @@ final class DateTest extends TestCase
         Date::fromString($date);
     }
 
-    public function dataFromStringInvalid(): iterable
+    public static function dataFromStringInvalid(): iterable
     {
         return [
             ['The date string can not be empty (use "today" for current date).', ''],
@@ -116,7 +119,7 @@ final class DateTest extends TestCase
         self::assertDate('2018-06-17', Date::fromParts(2018, 6, 17));
     }
 
-    /** @dataProvider dataFromPartsInvalid */
+    #[DataProvider('dataFromPartsInvalid')]
     public function testFromPartsInvalid(string $expected, int $year, int $month, int $day): void
     {
         $this->expectException(InvalidPartException::class);
@@ -125,7 +128,7 @@ final class DateTest extends TestCase
         Date::fromParts($year, $month, $day);
     }
 
-    public function dataFromPartsInvalid(): iterable
+    public static function dataFromPartsInvalid(): iterable
     {
         return [
             ['Month part must be between 1 and 12, but -1 given.', 2019, -1, 1],
@@ -143,13 +146,13 @@ final class DateTest extends TestCase
         self::assertDate('2018-06-17', Date::fromTimestamp($timestamp));
     }
 
-    /** @dataProvider dataFromNative */
+    #[DataProvider('dataFromNative')]
     public function testFromNative(string $expected, \DateTimeInterface $date): void
     {
         self::assertDate($expected, Date::fromNative($date));
     }
 
-    public function dataFromNative(): iterable
+    public static function dataFromNative(): iterable
     {
         return [
             ['2018-09-13', new \DateTime('2018-09-13 23:00:00')],
@@ -159,13 +162,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataCast */
+    #[DataProvider('dataCast')]
     public function testCast(string $expected, $date): void
     {
         self::assertDate($expected, Date::cast($date));
     }
 
-    public function dataCast(): iterable
+    public static function dataCast(): iterable
     {
         return [
             ['2018-06-17', strtotime('2018-06-17 23:35:00')],
@@ -194,13 +197,13 @@ final class DateTest extends TestCase
         self::assertSame('Samstag, 1.12.2018 0:00:00.0000 UTC', $date->formatIntl(null, 'EEEE, d.MM.yyyy H:mm:ss.SSSS VV'));
     }
 
-    /** @dataProvider dataIsPast */
+    #[DataProvider('dataIsPast')]
     public function testIsPast(bool $expected, Date $date): void
     {
         self::assertSame($expected, $date->isPast());
     }
 
-    public function dataIsPast(): iterable
+    public static function dataIsPast(): iterable
     {
         return [
             [false, Date::today()],
@@ -210,13 +213,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsFuture */
+    #[DataProvider('dataIsFuture')]
     public function testIsFuture(bool $expected, Date $date): void
     {
         self::assertSame($expected, $date->isFuture());
     }
 
-    public function dataIsFuture(): iterable
+    public static function dataIsFuture(): iterable
     {
         return [
             [false, Date::today()],
@@ -226,13 +229,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsToday */
+    #[DataProvider('dataIsToday')]
     public function testIsToday(bool $expected, Date $date): void
     {
         self::assertSame($expected, $date->isToday());
     }
 
-    public function dataIsToday(): iterable
+    public static function dataIsToday(): iterable
     {
         return [
             [false, Date::yesterday()],
@@ -243,7 +246,7 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataTimeZones */
+    #[DataProvider('dataTimeZones')]
     public function testToDateTime(string $expectedTimezone, ...$parameters): void
     {
         $dateTime = Date::fromString('2018-12-01')->toDateTime(...$parameters);
@@ -316,7 +319,7 @@ final class DateTest extends TestCase
         self::assertSame(3, $date->getWeekday());
     }
 
-    /** @dataProvider dataGetQuarter */
+    #[DataProvider('dataGetQuarter')]
     public function testGetQuarter(int $expected, string $date): void
     {
         $date = Date::fromString($date);
@@ -324,7 +327,7 @@ final class DateTest extends TestCase
         self::assertSame($expected, $date->getQuarter());
     }
 
-    public function dataGetQuarter(): iterable
+    public static function dataGetQuarter(): iterable
     {
         return [
             [1, '2020-01-01'],
@@ -338,13 +341,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsFirstDayOfYear */
+    #[DataProvider('dataIsFirstDayOfYear')]
     public function testIsFirstDayOfYear(bool $expected, string $date): void
     {
         self::assertSame($expected, Date::fromString($date)->isFirstDayOfYear());
     }
 
-    public function dataIsFirstDayOfYear(): iterable
+    public static function dataIsFirstDayOfYear(): iterable
     {
         return [
             [true, '2020-01-01'],
@@ -355,13 +358,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsLastDayOfYear */
+    #[DataProvider('dataIsLastDayOfYear')]
     public function testIsLastDayOfYear(bool $expected, string $date): void
     {
         self::assertSame($expected, Date::fromString($date)->isLastDayOfYear());
     }
 
-    public function dataIsLastDayOfYear(): iterable
+    public static function dataIsLastDayOfYear(): iterable
     {
         return [
             [true, '2020-12-31'],
@@ -372,13 +375,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsFirstDayOfMonth */
+    #[DataProvider('dataIsFirstDayOfMonth')]
     public function testIsFirstDayOfMonth(bool $expected, string $date): void
     {
         self::assertSame($expected, Date::fromString($date)->isFirstDayOfMonth());
     }
 
-    public function dataIsFirstDayOfMonth(): iterable
+    public static function dataIsFirstDayOfMonth(): iterable
     {
         return [
             [true, '2020-01-01'],
@@ -388,13 +391,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsLastDayOfMonth */
+    #[DataProvider('dataIsLastDayOfMonth')]
     public function testIsLastDayOfMonth(bool $expected, string $date): void
     {
         self::assertSame($expected, Date::fromString($date)->isLastDayOfMonth());
     }
 
-    public function dataIsLastDayOfMonth(): iterable
+    public static function dataIsLastDayOfMonth(): iterable
     {
         return [
             [true, '2020-01-31'],
@@ -404,13 +407,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAddYears */
+    #[DataProvider('dataAddYears')]
     public function testAddYears(string $expected, Date $date, int $years): void
     {
         self::assertDate($expected, $date->addYears($years));
     }
 
-    public function dataAddYears(): iterable
+    public static function dataAddYears(): iterable
     {
         return [
             ['2022-11-28', Date::fromString('2020-11-28'), 2],
@@ -419,13 +422,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSubYears */
+    #[DataProvider('dataSubYears')]
     public function testSubYears(string $expected, Date $date, int $years): void
     {
         self::assertDate($expected, $date->subYears($years));
     }
 
-    public function dataSubYears(): iterable
+    public static function dataSubYears(): iterable
     {
         return [
             ['2018-11-28', Date::fromString('2020-11-28'), 2],
@@ -434,13 +437,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAddMonths */
+    #[DataProvider('dataAddMonths')]
     public function testAddMonths(string $expected, Date $date, int $months): void
     {
         self::assertDate($expected, $date->addMonths($months));
     }
 
-    public function dataAddMonths(): iterable
+    public static function dataAddMonths(): iterable
     {
         return [
             ['2021-01-28', Date::fromString('2020-11-28'), 2],
@@ -449,13 +452,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSubMonths */
+    #[DataProvider('dataSubMonths')]
     public function testSubMonths(string $expected, Date $date, int $months): void
     {
         self::assertDate($expected, $date->subMonths($months));
     }
 
-    public function dataSubMonths(): iterable
+    public static function dataSubMonths(): iterable
     {
         return [
             ['2019-11-28', Date::fromString('2020-01-28'), 2],
@@ -464,13 +467,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAddWeeks */
+    #[DataProvider('dataAddWeeks')]
     public function testAddWeeks(string $expected, Date $date, int $weeks): void
     {
         self::assertDate($expected, $date->addWeeks($weeks));
     }
 
-    public function dataAddWeeks(): iterable
+    public static function dataAddWeeks(): iterable
     {
         return [
             ['2020-12-12', Date::fromString('2020-11-28'), 2],
@@ -479,13 +482,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSubWeeks */
+    #[DataProvider('dataSubWeeks')]
     public function testSubWeeks(string $expected, Date $date, int $weeks): void
     {
         self::assertDate($expected, $date->subWeeks($weeks));
     }
 
-    public function dataSubWeeks(): iterable
+    public static function dataSubWeeks(): iterable
     {
         return [
             ['2020-11-14', Date::fromString('2020-11-28'), 2],
@@ -494,13 +497,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAddDays */
+    #[DataProvider('dataAddDays')]
     public function testAddDays(string $expected, Date $date, int $days): void
     {
         self::assertDate($expected, $date->addDays($days));
     }
 
-    public function dataAddDays(): iterable
+    public static function dataAddDays(): iterable
     {
         return [
             ['2020-12-01', Date::fromString('2020-11-29'), 2],
@@ -509,13 +512,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSubDays */
+    #[DataProvider('dataSubDays')]
     public function testSubDays(string $expected, Date $date, int $days): void
     {
         self::assertDate($expected, $date->subDays($days));
     }
 
-    public function dataSubDays(): iterable
+    public static function dataSubDays(): iterable
     {
         return [
             ['2020-11-27', Date::fromString('2020-11-29'), 2],
@@ -524,13 +527,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToFirstDayOfYear */
+    #[DataProvider('dataToFirstDayOfYear')]
     public function testToFirstDayOfYear(string $expected, Date $date): void
     {
         self::assertDate($expected, $date->toFirstDayOfYear());
     }
 
-    public function dataToFirstDayOfYear(): iterable
+    public static function dataToFirstDayOfYear(): iterable
     {
         return [
             ['2019-01-01', Date::fromString('2019-01-01')],
@@ -539,13 +542,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToLastDayOfYear */
+    #[DataProvider('dataToLastDayOfYear')]
     public function testToLastDayOfYear(string $expected, Date $date): void
     {
         self::assertDate($expected, $date->toLastDayOfYear());
     }
 
-    public function dataToLastDayOfYear(): iterable
+    public static function dataToLastDayOfYear(): iterable
     {
         return [
             ['2019-12-31', Date::fromString('2019-01-01')],
@@ -554,13 +557,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToFirstDayOfQuarter */
+    #[DataProvider('dataToFirstDayOfQuarter')]
     public function testToFirstDayOfQuarter(string $expected, Date $date): void
     {
         self::assertDate($expected, $date->toFirstDayOfQuarter());
     }
 
-    public function dataToFirstDayOfQuarter(): iterable
+    public static function dataToFirstDayOfQuarter(): iterable
     {
         return [
             ['2019-01-01', Date::fromString('2019-01-01')],
@@ -570,13 +573,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToLastDayOfQuarter */
+    #[DataProvider('dataToLastDayOfQuarter')]
     public function testToLastDayOfQuarter(string $expected, Date $date): void
     {
         self::assertDate($expected, $date->toLastDayOfQuarter());
     }
 
-    public function dataToLastDayOfQuarter(): iterable
+    public static function dataToLastDayOfQuarter(): iterable
     {
         return [
             ['2019-03-31', Date::fromString('2019-01-01')],
@@ -586,13 +589,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToFirstDayOfMonth */
+    #[DataProvider('dataToFirstDayOfMonth')]
     public function testToFirstDayOfMonth(string $expected, Date $date): void
     {
         self::assertDate($expected, $date->toFirstDayOfMonth());
     }
 
-    public function dataToFirstDayOfMonth(): iterable
+    public static function dataToFirstDayOfMonth(): iterable
     {
         return [
             ['2019-01-01', Date::fromString('2019-01-01')],
@@ -601,13 +604,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToLastDayOfMonth */
+    #[DataProvider('dataToLastDayOfMonth')]
     public function testToLastDayOfMonth(string $expected, Date $date): void
     {
         self::assertDate($expected, $date->toLastDayOfMonth());
     }
 
-    public function dataToLastDayOfMonth(): iterable
+    public static function dataToLastDayOfMonth(): iterable
     {
         return [
             ['2019-01-31', Date::fromString('2019-01-01')],
@@ -616,7 +619,7 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToMonth */
+    #[DataProvider('dataToMonth')]
     public function testToMonth(Month $expected, string $date): void
     {
         $date = Date::fromString($date);
@@ -624,7 +627,7 @@ final class DateTest extends TestCase
         self::assertSame($expected, $date->toMonth());
     }
 
-    public function dataToMonth(): iterable
+    public static function dataToMonth(): iterable
     {
         return [
             [Month::March, '2019-03-12'],
@@ -633,7 +636,7 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToWeekday */
+    #[DataProvider('dataToWeekday')]
     public function testToWeekday(Weekday $expected, string $date): void
     {
         $date = Date::fromString($date);
@@ -641,7 +644,7 @@ final class DateTest extends TestCase
         self::assertSame($expected, $date->toWeekday());
     }
 
-    public function dataToWeekday(): iterable
+    public static function dataToWeekday(): iterable
     {
         return [
             [Weekday::Monday, '2019-07-15'],
@@ -650,7 +653,7 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToPrevWeekday */
+    #[DataProvider('dataToPrevWeekday')]
     public function testToPrevWeekday(string $expected, string $date, $weekday): void
     {
         $date = Date::fromString($date);
@@ -658,7 +661,7 @@ final class DateTest extends TestCase
         self::assertDate($expected, $date->toPrevWeekday($weekday));
     }
 
-    public function dataToPrevWeekday(): iterable
+    public static function dataToPrevWeekday(): iterable
     {
         return [
             ['2019-07-15', '2019-07-15', Weekday::Monday],
@@ -667,7 +670,7 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToNextWeekday */
+    #[DataProvider('dataToNextWeekday')]
     public function testToNextWeekday(string $expected, string $date, $weekday): void
     {
         $date = Date::fromString($date);
@@ -675,7 +678,7 @@ final class DateTest extends TestCase
         self::assertDate($expected, $date->toNextWeekday($weekday));
     }
 
-    public function dataToNextWeekday(): iterable
+    public static function dataToNextWeekday(): iterable
     {
         return [
             ['2019-07-14', '2019-07-14', Weekday::Sunday],
@@ -686,13 +689,13 @@ final class DateTest extends TestCase
 
     // === CompareTrait ===
 
-    /** @dataProvider dataMin */
+    #[DataProvider('dataMin')]
     public function testMin(int $expectedIndex, Date ...$dates): void
     {
         self::assertSame($dates[$expectedIndex], Date::min(...$dates));
     }
 
-    public function dataMin(): iterable
+    public static function dataMin(): iterable
     {
         return [
             [0, Date::fromString('2020-07-19')],
@@ -701,13 +704,13 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataMax */
+    #[DataProvider('dataMax')]
     public function testMax(int $expectedIndex, Date ...$dates): void
     {
         self::assertSame($dates[$expectedIndex], Date::max(...$dates));
     }
 
-    public function dataMax(): iterable
+    public static function dataMax(): iterable
     {
         return [
             [0, Date::fromString('2020-07-19')],
@@ -716,7 +719,7 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataDiff */
+    #[DataProvider('dataDiff')]
     public function testDiff(string $expected, Date $dateTime, Date $other, ...$parameters): void
     {
         $duration = $dateTime->diff($other, ...$parameters);
@@ -725,7 +728,7 @@ final class DateTest extends TestCase
         self::assertSame($expected, $duration->toIso());
     }
 
-    public function dataDiff(): iterable
+    public static function dataDiff(): iterable
     {
         return [
             ['PT0S', Date::fromString('2020-07-19'), Date::fromString('2020-07-19')],
@@ -736,7 +739,7 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataCompareTo */
+    #[DataProvider('dataCompareTo')]
     public function testCompareTo(int $expected, Date $dateTime, Date $other): void
     {
         self::assertSame($expected, $dateTime->compareTo($other));
@@ -747,7 +750,7 @@ final class DateTest extends TestCase
         self::assertSame(1 !== $expected, $dateTime->lowerEquals($other));
     }
 
-    public function dataCompareTo(): iterable
+    public static function dataCompareTo(): iterable
     {
         return [
             [0, Date::fromString('2020-07-19'), Date::fromString('2020-07-19')],
@@ -767,7 +770,7 @@ final class DateTest extends TestCase
 
     // === ModifyTrait ===
 
-    /** @dataProvider dataModify */
+    #[DataProvider('dataModify')]
     public function testModify(string $expected, string $modify): void
     {
         $date = Date::fromString('2020-07-26');
@@ -775,7 +778,7 @@ final class DateTest extends TestCase
         self::assertDate($expected, $date->modify($modify));
     }
 
-    public function dataModify(): iterable
+    public static function dataModify(): iterable
     {
         return [
             ['2021-06-26', '+1year -1month'],
@@ -787,12 +790,12 @@ final class DateTest extends TestCase
     public function testModifyInvalid(): void
     {
         $this->expectException(InvalidStringException::class);
-        $this->expectExceptionMessage('Failed to parse time string (foo) at position 0 (f): The timezone could not be found in the database.');
+        $this->expectExceptionMessageMatches('/^Failed to parse time string \(foo\)/');
 
         Date::fromString('2024-02-09')->modify('foo');
     }
 
-    /** @dataProvider dataAdd */
+    #[DataProvider('dataAdd')]
     public function testAdd(string $expected, string $duration): void
     {
         $date = Date::fromString('2020-07-26');
@@ -800,7 +803,7 @@ final class DateTest extends TestCase
         self::assertDate($expected, $date->add(Duration::fromString($duration)));
     }
 
-    public function dataAdd(): iterable
+    public static function dataAdd(): iterable
     {
         return [
             ['2020-08-01', 'P1WT-1H'],
@@ -808,7 +811,7 @@ final class DateTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSub */
+    #[DataProvider('dataSub')]
     public function testSub(string $expected, string $duration): void
     {
         $date = Date::fromString('2020-07-26');
@@ -816,7 +819,7 @@ final class DateTest extends TestCase
         self::assertDate($expected, $date->sub(Duration::fromString($duration)));
     }
 
-    public function dataSub(): iterable
+    public static function dataSub(): iterable
     {
         return [
             ['2020-07-19', 'P1WT-2H'],

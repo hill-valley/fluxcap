@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace HillValley\Fluxcap\Tests;
 
+use HillValley\Fluxcap\Base\IntlFormatter;
 use HillValley\Fluxcap\Date;
 use HillValley\Fluxcap\DateTime;
 use HillValley\Fluxcap\Duration;
@@ -14,13 +15,15 @@ use HillValley\Fluxcap\Month;
 use HillValley\Fluxcap\Time;
 use HillValley\Fluxcap\TimeZone;
 use HillValley\Fluxcap\Weekday;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
- * @covers \HillValley\Fluxcap\Base\IntlFormatter
- * @covers \HillValley\Fluxcap\DateTime
  */
+#[CoversClass(IntlFormatter::class)]
+#[CoversClass(DateTime::class)]
 final class DateTimeTest extends TestCase
 {
     public function testConstruct(): void
@@ -30,7 +33,7 @@ final class DateTimeTest extends TestCase
         self::assertTrue($method->isPrivate());
     }
 
-    /** @dataProvider dataTimeZones */
+    #[DataProvider('dataTimeZones')]
     public function testNow(string $expectedTimezone, ...$parameters): void
     {
         self::assertDateTimeNow(DateTime::now(...$parameters), $expectedTimezone);
@@ -41,7 +44,7 @@ final class DateTimeTest extends TestCase
         self::assertDateTimeNow(DateTime::utcNow(), 'UTC');
     }
 
-    /** @dataProvider dataTimeZones */
+    #[DataProvider('dataTimeZones')]
     public function testToday(string $expectedTimezone, ...$parameters): void
     {
         $expected = new \DateTimeImmutable('today', new \DateTimeZone($expectedTimezone));
@@ -50,7 +53,7 @@ final class DateTimeTest extends TestCase
         self::assertDateTime($expected, DateTime::today(...$parameters));
     }
 
-    /** @dataProvider dataTimeZones */
+    #[DataProvider('dataTimeZones')]
     public function testYesterday(string $expectedTimezone, ...$parameters): void
     {
         $expected = new \DateTimeImmutable('yesterday', new \DateTimeZone($expectedTimezone));
@@ -59,7 +62,7 @@ final class DateTimeTest extends TestCase
         self::assertDateTime($expected, DateTime::yesterday(...$parameters));
     }
 
-    /** @dataProvider dataTimeZones */
+    #[DataProvider('dataTimeZones')]
     public function testTomorrow(string $expectedTimezone, ...$parameters): void
     {
         $expected = new \DateTimeImmutable('tomorrow', new \DateTimeZone($expectedTimezone));
@@ -68,7 +71,7 @@ final class DateTimeTest extends TestCase
         self::assertDateTime($expected, DateTime::tomorrow(...$parameters));
     }
 
-    public function dataTimeZones(): iterable
+    public static function dataTimeZones(): iterable
     {
         return [
             ['Europe/Berlin'],
@@ -78,19 +81,19 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataTimeZones */
+    #[DataProvider('dataTimeZones')]
     public function testFromStringNow(string $expectedTimezone, ...$parameters): void
     {
         self::assertDateTimeNow(DateTime::fromString('now', ...$parameters), $expectedTimezone);
     }
 
-    /** @dataProvider dataFromString */
+    #[DataProvider('dataFromString')]
     public function testFromString(string $expected, string $dateTime, ?TimeZone $timeZone = null): void
     {
         self::assertDateTime($expected, DateTime::fromString($dateTime, $timeZone));
     }
 
-    public function dataFromString(): iterable
+    public static function dataFromString(): iterable
     {
         return [
             ['2018-12-08 00:00:00.000000 Europe/Berlin', '2018-12-08'],
@@ -106,7 +109,7 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFromStringInvalid */
+    #[DataProvider('dataFromStringInvalid')]
     public function testFromStringInvalid(string $expected, string $dateTime): void
     {
         $this->expectException(InvalidStringException::class);
@@ -115,7 +118,7 @@ final class DateTimeTest extends TestCase
         DateTime::fromString($dateTime);
     }
 
-    public function dataFromStringInvalid(): iterable
+    public static function dataFromStringInvalid(): iterable
     {
         return [
             ['The date-time string can not be empty (use "now" for current time).', ''],
@@ -129,13 +132,13 @@ final class DateTimeTest extends TestCase
         self::assertDateTimeNow(DateTime::utcFromString('now'), 'UTC');
     }
 
-    /** @dataProvider dataUtcFromString */
+    #[DataProvider('dataUtcFromString')]
     public function testUtcFromString(string $expected, string $dateTime): void
     {
         self::assertDateTime($expected, DateTime::utcFromString($dateTime));
     }
 
-    public function dataUtcFromString(): iterable
+    public static function dataUtcFromString(): iterable
     {
         return [
             ['2018-12-08 00:00:00.000000 UTC', '2018-12-08'],
@@ -149,19 +152,19 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataTimeZones */
+    #[DataProvider('dataTimeZones')]
     public function testFromUtcStringNow(string $expectedTimezone, ...$parameters): void
     {
         self::assertDateTimeNow(DateTime::fromUtcString('now', ...$parameters), $expectedTimezone);
     }
 
-    /** @dataProvider dataFromUtcString */
+    #[DataProvider('dataFromUtcString')]
     public function testFromUtcString(string $expected, string $dateTime, ?TimeZone $timeZone = null): void
     {
         self::assertDateTime($expected, DateTime::fromUtcString($dateTime, $timeZone));
     }
 
-    public function dataFromUtcString(): iterable
+    public static function dataFromUtcString(): iterable
     {
         return [
             ['2018-12-08 01:00:00.000000 Europe/Berlin', '2018-12-08'],
@@ -177,13 +180,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFromFormat */
+    #[DataProvider('dataFromFormat')]
     public function testFromFormat(string $expected, string $format, string $dateTime, ?TimeZone $timeZone = null): void
     {
         self::assertDateTime($expected, DateTime::fromFormat($format, $dateTime, $timeZone));
     }
 
-    public function dataFromFormat(): iterable
+    public static function dataFromFormat(): iterable
     {
         return [
             ['2018-12-08 15:32:00.000000 Europe/Berlin', 'j.n.Y, i.H', '8.12.2018, 32.15'],
@@ -201,13 +204,13 @@ final class DateTimeTest extends TestCase
         DateTime::fromFormat('d.m.Y, H:i:s', '2018-10-03 20:10:00');
     }
 
-    /** @dataProvider dataFromParts */
+    #[DataProvider('dataFromParts')]
     public function testFromParts(string $expected, ...$parts): void
     {
         self::assertDateTime($expected, DateTime::fromParts(...$parts));
     }
 
-    public function dataFromParts(): iterable
+    public static function dataFromParts(): iterable
     {
         return [
             ['2018-05-04 00:00:00.000000 Europe/Berlin', 2018, 5, 4],
@@ -220,7 +223,7 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFromPartsInvalid */
+    #[DataProvider('dataFromPartsInvalid')]
     public function testFromPartsInvalid(string $expected, ...$parts): void
     {
         $this->expectException(InvalidPartException::class);
@@ -229,7 +232,7 @@ final class DateTimeTest extends TestCase
         DateTime::fromParts(...$parts);
     }
 
-    public function dataFromPartsInvalid(): iterable
+    public static function dataFromPartsInvalid(): iterable
     {
         return [
             ['Month part must be between 1 and 12, but -1 given.', 2019, -1, 1],
@@ -249,13 +252,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFromTimestamp */
+    #[DataProvider('dataFromTimestamp')]
     public function testFromTimestamp(string $expected, int $timestamp, ?TimeZone $timeZone = null): void
     {
         self::assertDateTime($expected, DateTime::fromTimestamp($timestamp, $timeZone));
     }
 
-    public function dataFromTimestamp(): iterable
+    public static function dataFromTimestamp(): iterable
     {
         return [
             ['2018-12-01 01:05:20.000000 Europe/Berlin', strtotime('2018-12-01 01:05:20')],
@@ -263,13 +266,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFromNative */
+    #[DataProvider('dataFromNative')]
     public function testFromNative(string $expected, \DateTimeInterface $dateTime): void
     {
         self::assertDateTime($expected, DateTime::fromNative($dateTime));
     }
 
-    public function dataFromNative(): iterable
+    public static function dataFromNative(): iterable
     {
         return [
             ['2018-09-13 23:00:00.000000 Europe/Berlin', new \DateTime('2018-09-13 23:00:00')],
@@ -279,13 +282,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataCombine */
+    #[DataProvider('dataCombine')]
     public function testCombine(string $expected, Date $date, Time $time, ?TimeZone $timeZone = null): void
     {
         self::assertDateTime($expected, DateTime::combine($date, $time, $timeZone));
     }
 
-    public function dataCombine(): iterable
+    public static function dataCombine(): iterable
     {
         return [
             ['2018-10-12 04:30:15.123456 Europe/Berlin', Date::fromString('2018-10-12'), Time::fromString('04:30:15.123456')],
@@ -293,13 +296,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataCast */
+    #[DataProvider('dataCast')]
     public function testCast(string $expected, $dateTime): void
     {
         self::assertDateTime($expected, DateTime::cast($dateTime));
     }
 
-    public function dataCast(): iterable
+    public static function dataCast(): iterable
     {
         return [
             ['2018-06-17 23:35:00.000000 Europe/Berlin', strtotime('2018-06-17 23:35:00')],
@@ -329,14 +332,14 @@ final class DateTimeTest extends TestCase
         self::assertSame(-25200, $dateTime->getOffset());
     }
 
-    /** @dataProvider dataToIso */
+    #[DataProvider('dataToIso')]
     public function testToIso(string $expected, DateTime $dateTime): void
     {
         self::assertSame($expected, $dateTime->toIso());
         self::assertSame($expected, (string) $dateTime);
     }
 
-    public function dataToIso(): iterable
+    public static function dataToIso(): iterable
     {
         return [
             ['2018-12-08T12:45:00.000000Z', DateTime::utcFromString('2018-12-08 12:45')],
@@ -347,7 +350,7 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFormatIntl */
+    #[DataProvider('dataFormatIntl')]
     public function testFormatIntl(string $expected, ...$parameters): void
     {
         $dateTime = DateTime::fromString('2020-07-02 03:20:50.123456');
@@ -355,7 +358,7 @@ final class DateTimeTest extends TestCase
         self::assertSame($expected, $dateTime->formatIntl(...$parameters));
     }
 
-    public function dataFormatIntl(): iterable
+    public static function dataFormatIntl(): iterable
     {
         return [
             ['2. Juli 2020 um 03:20:50'],
@@ -380,13 +383,13 @@ final class DateTimeTest extends TestCase
         self::assertSame('03:20', $dateTime->formatIntlTime(\IntlDateFormatter::SHORT));
     }
 
-    /** @dataProvider dataIsPast */
+    #[DataProvider('dataIsPast')]
     public function testIsPast(bool $expected, DateTime $dateTime): void
     {
         self::assertSame($expected, $dateTime->isPast());
     }
 
-    public function dataIsPast(): iterable
+    public static function dataIsPast(): iterable
     {
         return [
             [false, DateTime::now()->addSeconds(2)],
@@ -398,13 +401,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsFuture */
+    #[DataProvider('dataIsFuture')]
     public function testIsFuture(bool $expected, DateTime $dateTime): void
     {
         self::assertSame($expected, $dateTime->isFuture());
     }
 
-    public function dataIsFuture(): iterable
+    public static function dataIsFuture(): iterable
     {
         return [
             [false, DateTime::now()],
@@ -416,13 +419,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsToday */
+    #[DataProvider('dataIsToday')]
     public function testIsToday(bool $expected, DateTime $dateTime): void
     {
         self::assertSame($expected, $dateTime->isToday());
     }
 
-    public function dataIsToday(): iterable
+    public static function dataIsToday(): iterable
     {
         return [
             [false, DateTime::fromString('yesterday 23:59:59.999999')],
@@ -468,13 +471,13 @@ final class DateTimeTest extends TestCase
         self::assertDateTime('2020-07-02 01:20:50.123456 UTC', $dateTime->toUtc());
     }
 
-    /** @dataProvider dataToMidnight */
+    #[DataProvider('dataToMidnight')]
     public function testToMidnight(string $expected, DateTime $dateTime): void
     {
         self::assertDateTime($expected, $dateTime->toMidnight());
     }
 
-    public function dataToMidnight(): iterable
+    public static function dataToMidnight(): iterable
     {
         return [
             ['2020-11-15 00:00:00.000000 Europe/Berlin', DateTime::fromString('2020-11-15 00:00:00.000000')],
@@ -515,7 +518,7 @@ final class DateTimeTest extends TestCase
         self::assertSame('2018-12-08 12:45:00.123456 EET', $dateTime->format('Y-m-d H:i:s.u e'));
     }
 
-    /** @dataProvider dataToTimestamp */
+    #[DataProvider('dataToTimestamp')]
     public function testToTimestamp(?TimeZone $timeZone): void
     {
         $timestamp = time();
@@ -524,7 +527,7 @@ final class DateTimeTest extends TestCase
         self::assertSame($timestamp, $dateTime->toTimestamp());
     }
 
-    public function dataToTimestamp(): iterable
+    public static function dataToTimestamp(): iterable
     {
         return [
             [null],
@@ -579,7 +582,7 @@ final class DateTimeTest extends TestCase
         self::assertSame(12340, $dateTime->getMicrosecond());
     }
 
-    /** @dataProvider dataGetQuarter */
+    #[DataProvider('dataGetQuarter')]
     public function testGetQuarter(int $expected, string $dateTime): void
     {
         $dateTime = DateTime::fromString($dateTime);
@@ -587,7 +590,7 @@ final class DateTimeTest extends TestCase
         self::assertSame($expected, $dateTime->getQuarter());
     }
 
-    public function dataGetQuarter(): iterable
+    public static function dataGetQuarter(): iterable
     {
         return [
             [1, '2020-01-01 00:00:00'],
@@ -601,13 +604,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsFirstDayOfYear */
+    #[DataProvider('dataIsFirstDayOfYear')]
     public function testIsFirstDayOfYear(bool $expected, string $dateTime): void
     {
         self::assertSame($expected, DateTime::fromString($dateTime)->isFirstDayOfYear());
     }
 
-    public function dataIsFirstDayOfYear(): iterable
+    public static function dataIsFirstDayOfYear(): iterable
     {
         return [
             [true, '2020-01-01 00:00:00'],
@@ -618,13 +621,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsLastDayOfYear */
+    #[DataProvider('dataIsLastDayOfYear')]
     public function testIsLastDayOfYear(bool $expected, string $dateTime): void
     {
         self::assertSame($expected, DateTime::fromString($dateTime)->isLastDayOfYear());
     }
 
-    public function dataIsLastDayOfYear(): iterable
+    public static function dataIsLastDayOfYear(): iterable
     {
         return [
             [true, '2020-12-31 00:00:00'],
@@ -635,13 +638,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsFirstDayOfMonth */
+    #[DataProvider('dataIsFirstDayOfMonth')]
     public function testIsFirstDayOfMonth(bool $expected, string $dateTime): void
     {
         self::assertSame($expected, DateTime::fromString($dateTime)->isFirstDayOfMonth());
     }
 
-    public function dataIsFirstDayOfMonth(): iterable
+    public static function dataIsFirstDayOfMonth(): iterable
     {
         return [
             [true, '2020-01-01 00:00:00'],
@@ -651,13 +654,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsLastDayOfMonth */
+    #[DataProvider('dataIsLastDayOfMonth')]
     public function testIsLastDayOfMonth(bool $expected, string $dateTime): void
     {
         self::assertSame($expected, DateTime::fromString($dateTime)->isLastDayOfMonth());
     }
 
-    public function dataIsLastDayOfMonth(): iterable
+    public static function dataIsLastDayOfMonth(): iterable
     {
         return [
             [true, '2020-01-31 00:00:00'],
@@ -667,13 +670,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsMidnight */
+    #[DataProvider('dataIsMidnight')]
     public function testIsMidnight(bool $expected, string $dateTime): void
     {
         self::assertSame($expected, DateTime::fromString($dateTime)->isMidnight());
     }
 
-    public function dataIsMidnight(): iterable
+    public static function dataIsMidnight(): iterable
     {
         return [
             [true, '2020-08-10 00:00'],
@@ -683,13 +686,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAddYears */
+    #[DataProvider('dataAddYears')]
     public function testAddYears(string $expected, DateTime $dateTime, int $years): void
     {
         self::assertDateTime($expected, $dateTime->addYears($years));
     }
 
-    public function dataAddYears(): iterable
+    public static function dataAddYears(): iterable
     {
         return [
             ['2022-11-28 17:25:00.000000 Europe/Berlin', DateTime::fromString('2020-11-28 17:25:00'), 2],
@@ -698,13 +701,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSubYears */
+    #[DataProvider('dataSubYears')]
     public function testSubYears(string $expected, DateTime $dateTime, int $years): void
     {
         self::assertDateTime($expected, $dateTime->subYears($years));
     }
 
-    public function dataSubYears(): iterable
+    public static function dataSubYears(): iterable
     {
         return [
             ['2018-11-28 17:25:00.000000 Europe/Berlin', DateTime::fromString('2020-11-28 17:25:00'), 2],
@@ -713,13 +716,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAddMonths */
+    #[DataProvider('dataAddMonths')]
     public function testAddMonths(string $expected, DateTime $dateTime, int $months): void
     {
         self::assertDateTime($expected, $dateTime->addMonths($months));
     }
 
-    public function dataAddMonths(): iterable
+    public static function dataAddMonths(): iterable
     {
         return [
             ['2021-01-28 17:25:00.000000 Europe/Berlin', DateTime::fromString('2020-11-28 17:25:00'), 2],
@@ -728,13 +731,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSubMonths */
+    #[DataProvider('dataSubMonths')]
     public function testSubMonths(string $expected, DateTime $dateTime, int $months): void
     {
         self::assertDateTime($expected, $dateTime->subMonths($months));
     }
 
-    public function dataSubMonths(): iterable
+    public static function dataSubMonths(): iterable
     {
         return [
             ['2019-11-28 17:25:00.000000 Europe/Berlin', DateTime::fromString('2020-01-28 17:25:00'), 2],
@@ -743,13 +746,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAddWeeks */
+    #[DataProvider('dataAddWeeks')]
     public function testAddWeeks(string $expected, DateTime $dateTime, int $weeks): void
     {
         self::assertDateTime($expected, $dateTime->addWeeks($weeks));
     }
 
-    public function dataAddWeeks(): iterable
+    public static function dataAddWeeks(): iterable
     {
         return [
             ['2020-12-12 17:25:00.000000 Europe/Berlin', DateTime::fromString('2020-11-28 17:25:00'), 2],
@@ -758,13 +761,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSubWeeks */
+    #[DataProvider('dataSubWeeks')]
     public function testSubWeeks(string $expected, DateTime $dateTime, int $weeks): void
     {
         self::assertDateTime($expected, $dateTime->subWeeks($weeks));
     }
 
-    public function dataSubWeeks(): iterable
+    public static function dataSubWeeks(): iterable
     {
         return [
             ['2020-11-14 17:25:00.000000 Europe/Berlin', DateTime::fromString('2020-11-28 17:25:00'), 2],
@@ -773,13 +776,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAddDays */
+    #[DataProvider('dataAddDays')]
     public function testAddDays(string $expected, DateTime $dateTime, int $days): void
     {
         self::assertDateTime($expected, $dateTime->addDays($days));
     }
 
-    public function dataAddDays(): iterable
+    public static function dataAddDays(): iterable
     {
         return [
             ['2020-12-01 17:25:00.000000 Europe/Berlin', DateTime::fromString('2020-11-29 17:25:00'), 2],
@@ -788,13 +791,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSubDays */
+    #[DataProvider('dataSubDays')]
     public function testSubDays(string $expected, DateTime $dateTime, int $days): void
     {
         self::assertDateTime($expected, $dateTime->subDays($days));
     }
 
-    public function dataSubDays(): iterable
+    public static function dataSubDays(): iterable
     {
         return [
             ['2020-11-27 17:25:00.000000 Europe/Berlin', DateTime::fromString('2020-11-29 17:25:00'), 2],
@@ -803,13 +806,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAddHours */
+    #[DataProvider('dataAddHours')]
     public function testAddHours(string $expected, DateTime $dateTime, int $hours): void
     {
         self::assertDateTime($expected, $dateTime->addHours($hours));
     }
 
-    public function dataAddHours(): iterable
+    public static function dataAddHours(): iterable
     {
         return [
             ['2020-11-28 19:25:00.000000 Europe/Berlin', DateTime::fromString('2020-11-28 17:25:00'), 2],
@@ -818,13 +821,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSubHours */
+    #[DataProvider('dataSubHours')]
     public function testSubHours(string $expected, DateTime $dateTime, int $hours): void
     {
         self::assertDateTime($expected, $dateTime->subHours($hours));
     }
 
-    public function dataSubHours(): iterable
+    public static function dataSubHours(): iterable
     {
         return [
             ['2020-11-28 15:25:00.000000 Europe/Berlin', DateTime::fromString('2020-11-28 17:25:00'), 2],
@@ -833,13 +836,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAddMinutes */
+    #[DataProvider('dataAddMinutes')]
     public function testAddMinutes(string $expected, DateTime $dateTime, int $minutes): void
     {
         self::assertDateTime($expected, $dateTime->addMinutes($minutes));
     }
 
-    public function dataAddMinutes(): iterable
+    public static function dataAddMinutes(): iterable
     {
         return [
             ['2020-11-28 17:27:00.000000 Europe/Berlin', DateTime::fromString('2020-11-28 17:25:00'), 2],
@@ -848,13 +851,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSubMinutes */
+    #[DataProvider('dataSubMinutes')]
     public function testSubMinutes(string $expected, DateTime $dateTime, int $minutes): void
     {
         self::assertDateTime($expected, $dateTime->subMinutes($minutes));
     }
 
-    public function dataSubMinutes(): iterable
+    public static function dataSubMinutes(): iterable
     {
         return [
             ['2020-11-28 17:23:00.000000 Europe/Berlin', DateTime::fromString('2020-11-28 17:25:00'), 2],
@@ -863,13 +866,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAddSeconds */
+    #[DataProvider('dataAddSeconds')]
     public function testAddSeconds(string $expected, DateTime $dateTime, int $seconds): void
     {
         self::assertDateTime($expected, $dateTime->addSeconds($seconds));
     }
 
-    public function dataAddSeconds(): iterable
+    public static function dataAddSeconds(): iterable
     {
         return [
             ['2020-11-28 17:25:07.000000 Europe/Berlin', DateTime::fromString('2020-11-28 17:25:05'), 2],
@@ -878,13 +881,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSubSeconds */
+    #[DataProvider('dataSubSeconds')]
     public function testSubSeconds(string $expected, DateTime $dateTime, int $seconds): void
     {
         self::assertDateTime($expected, $dateTime->subSeconds($seconds));
     }
 
-    public function dataSubSeconds(): iterable
+    public static function dataSubSeconds(): iterable
     {
         return [
             ['2020-11-28 17:25:03.000000 Europe/Berlin', DateTime::fromString('2020-11-28 17:25:05'), 2],
@@ -893,13 +896,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToFirstDayOfYear */
+    #[DataProvider('dataToFirstDayOfYear')]
     public function testToFirstDayOfYear(string $expected, DateTime $dateTime): void
     {
         self::assertDateTime($expected, $dateTime->toFirstDayOfYear());
     }
 
-    public function dataToFirstDayOfYear(): iterable
+    public static function dataToFirstDayOfYear(): iterable
     {
         return [
             ['2019-01-01 00:00:00.000000 Europe/Berlin', DateTime::fromString('2019-01-01 00:00:00')],
@@ -908,13 +911,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToLastDayOfYear */
+    #[DataProvider('dataToLastDayOfYear')]
     public function testToLastDayOfYear(string $expected, DateTime $dateTime): void
     {
         self::assertDateTime($expected, $dateTime->toLastDayOfYear());
     }
 
-    public function dataToLastDayOfYear(): iterable
+    public static function dataToLastDayOfYear(): iterable
     {
         return [
             ['2019-12-31 00:00:00.000000 Europe/Berlin', DateTime::fromString('2019-01-01 00:00:00')],
@@ -923,13 +926,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToFirstDayOfQuarter */
+    #[DataProvider('dataToFirstDayOfQuarter')]
     public function testToFirstDayOfQuarter(string $expected, DateTime $dateTime): void
     {
         self::assertDateTime($expected, $dateTime->toFirstDayOfQuarter());
     }
 
-    public function dataToFirstDayOfQuarter(): iterable
+    public static function dataToFirstDayOfQuarter(): iterable
     {
         return [
             ['2019-01-01 00:00:00.000000 Europe/Berlin', DateTime::fromString('2019-01-01 00:00:00')],
@@ -939,13 +942,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToLastDayOfQuarter */
+    #[DataProvider('dataToLastDayOfQuarter')]
     public function testToLastDayOfQuarter(string $expected, DateTime $dateTime): void
     {
         self::assertDateTime($expected, $dateTime->toLastDayOfQuarter());
     }
 
-    public function dataToLastDayOfQuarter(): iterable
+    public static function dataToLastDayOfQuarter(): iterable
     {
         return [
             ['2019-03-31 00:00:00.000000 Europe/Berlin', DateTime::fromString('2019-01-01 00:00:00')],
@@ -955,13 +958,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToFirstDayOfMonth */
+    #[DataProvider('dataToFirstDayOfMonth')]
     public function testToFirstDayOfMonth(string $expected, DateTime $dateTime): void
     {
         self::assertDateTime($expected, $dateTime->toFirstDayOfMonth());
     }
 
-    public function dataToFirstDayOfMonth(): iterable
+    public static function dataToFirstDayOfMonth(): iterable
     {
         return [
             ['2019-01-01 00:00:00.000000 Europe/Berlin', DateTime::fromString('2019-01-01 00:00:00')],
@@ -970,13 +973,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToLastDayOfMonth */
+    #[DataProvider('dataToLastDayOfMonth')]
     public function testToLastDayOfMonth(string $expected, DateTime $dateTime): void
     {
         self::assertDateTime($expected, $dateTime->toLastDayOfMonth());
     }
 
-    public function dataToLastDayOfMonth(): iterable
+    public static function dataToLastDayOfMonth(): iterable
     {
         return [
             ['2019-01-31 00:00:00.000000 Europe/Berlin', DateTime::fromString('2019-01-01 00:00:00')],
@@ -985,7 +988,7 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToMonth */
+    #[DataProvider('dataToMonth')]
     public function testToMonth(Month $expected, string $dateTime): void
     {
         $dateTime = DateTime::fromString($dateTime);
@@ -993,7 +996,7 @@ final class DateTimeTest extends TestCase
         self::assertSame($expected, $dateTime->toMonth());
     }
 
-    public function dataToMonth(): iterable
+    public static function dataToMonth(): iterable
     {
         return [
             [Month::March, '2019-03-12 12:05:23'],
@@ -1002,7 +1005,7 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToWeekday */
+    #[DataProvider('dataToWeekday')]
     public function testToWeekday(Weekday $expected, string $dateTime): void
     {
         $dateTime = DateTime::fromString($dateTime);
@@ -1010,7 +1013,7 @@ final class DateTimeTest extends TestCase
         self::assertSame($expected, $dateTime->toWeekday());
     }
 
-    public function dataToWeekday(): iterable
+    public static function dataToWeekday(): iterable
     {
         return [
             [Weekday::Monday, '2019-07-15 12:05:23'],
@@ -1019,7 +1022,7 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToPrevWeekday */
+    #[DataProvider('dataToPrevWeekday')]
     public function testToPrevWeekday(string $expected, string $dateTime, $weekday): void
     {
         $dateTime = DateTime::fromString($dateTime);
@@ -1027,7 +1030,7 @@ final class DateTimeTest extends TestCase
         self::assertDateTime($expected, $dateTime->toPrevWeekday($weekday));
     }
 
-    public function dataToPrevWeekday(): iterable
+    public static function dataToPrevWeekday(): iterable
     {
         return [
             ['2019-07-15 12:05:23.000000 Europe/Berlin', '2019-07-15 12:05:23', Weekday::Monday],
@@ -1036,7 +1039,7 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToNextWeekday */
+    #[DataProvider('dataToNextWeekday')]
     public function testToNextWeekday(string $expected, string $dateTime, $weekday): void
     {
         $dateTime = DateTime::fromString($dateTime);
@@ -1044,7 +1047,7 @@ final class DateTimeTest extends TestCase
         self::assertDateTime($expected, $dateTime->toNextWeekday($weekday));
     }
 
-    public function dataToNextWeekday(): iterable
+    public static function dataToNextWeekday(): iterable
     {
         return [
             ['2019-07-14 12:05:23.000000 Europe/Berlin', '2019-07-14 12:05:23', Weekday::Sunday],
@@ -1055,13 +1058,13 @@ final class DateTimeTest extends TestCase
 
     // === CompareTrait ===
 
-    /** @dataProvider dataMin */
+    #[DataProvider('dataMin')]
     public function testMin(int $expectedIndex, DateTime ...$dateTimes): void
     {
         self::assertSame($dateTimes[$expectedIndex], DateTime::min(...$dateTimes));
     }
 
-    public function dataMin(): iterable
+    public static function dataMin(): iterable
     {
         return [
             [0, DateTime::fromString('2020-07-19 18:30:00')],
@@ -1071,13 +1074,13 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataMax */
+    #[DataProvider('dataMax')]
     public function testMax(int $expectedIndex, DateTime ...$dateTimes): void
     {
         self::assertSame($dateTimes[$expectedIndex], DateTime::max(...$dateTimes));
     }
 
-    public function dataMax(): iterable
+    public static function dataMax(): iterable
     {
         return [
             [0, DateTime::fromString('2020-07-19 18:30:00')],
@@ -1087,7 +1090,7 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataDiff */
+    #[DataProvider('dataDiff')]
     public function testDiff(string $expected, DateTime $dateTime, DateTime $other, ...$parameters): void
     {
         $duration = $dateTime->diff($other, ...$parameters);
@@ -1096,7 +1099,7 @@ final class DateTimeTest extends TestCase
         self::assertSame($expected, $duration->toIso());
     }
 
-    public function dataDiff(): iterable
+    public static function dataDiff(): iterable
     {
         return [
             ['PT0S', DateTime::fromString('2020-07-19 18:30:00'), DateTime::fromString('2020-07-19 18:30:00')],
@@ -1108,7 +1111,7 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataCompareTo */
+    #[DataProvider('dataCompareTo')]
     public function testCompareTo(int $expected, DateTime $dateTime, DateTime $other): void
     {
         self::assertSame($expected, $dateTime->compareTo($other));
@@ -1119,7 +1122,7 @@ final class DateTimeTest extends TestCase
         self::assertSame(1 !== $expected, $dateTime->lowerEquals($other));
     }
 
-    public function dataCompareTo(): iterable
+    public static function dataCompareTo(): iterable
     {
         return [
             [0, DateTime::fromString('2020-07-19 18:30:00'), DateTime::fromString('2020-07-19 18:30:00')],
@@ -1141,7 +1144,7 @@ final class DateTimeTest extends TestCase
 
     // === ModifyTrait ===
 
-    /** @dataProvider dataModify */
+    #[DataProvider('dataModify')]
     public function testModify(string $expected, string $modify): void
     {
         $dateTime = DateTime::fromString('2020-07-26 18:30:00.123456');
@@ -1149,7 +1152,7 @@ final class DateTimeTest extends TestCase
         self::assertDateTime($expected, $dateTime->modify($modify));
     }
 
-    public function dataModify(): iterable
+    public static function dataModify(): iterable
     {
         return [
             ['2020-07-27 13:30:00.123456 Europe/Berlin', '+1day -5hours'],
@@ -1161,12 +1164,12 @@ final class DateTimeTest extends TestCase
     public function testModifyInvalid(): void
     {
         $this->expectException(InvalidStringException::class);
-        $this->expectExceptionMessage('Failed to parse time string (foo) at position 0 (f): The timezone could not be found in the database.');
+        $this->expectExceptionMessageMatches('/^Failed to parse time string \(foo\)/');
 
         DateTime::fromString('2024-02-09')->modify('foo');
     }
 
-    /** @dataProvider dataAdd */
+    #[DataProvider('dataAdd')]
     public function testAdd(string $expected, string $duration): void
     {
         $dateTime = DateTime::fromString('2020-07-26 18:30:00.123456');
@@ -1174,7 +1177,7 @@ final class DateTimeTest extends TestCase
         self::assertDateTime($expected, $dateTime->add(Duration::fromString($duration)));
     }
 
-    public function dataAdd(): iterable
+    public static function dataAdd(): iterable
     {
         return [
             ['2020-08-02 16:30:05.456456 Europe/Berlin', 'P1WT-2H5.333S'],
@@ -1182,7 +1185,7 @@ final class DateTimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSub */
+    #[DataProvider('dataSub')]
     public function testSub(string $expected, string $duration): void
     {
         $dateTime = DateTime::fromString('2020-07-26 18:30:00.123456');
@@ -1190,7 +1193,7 @@ final class DateTimeTest extends TestCase
         self::assertDateTime($expected, $dateTime->sub(Duration::fromString($duration)));
     }
 
-    public function dataSub(): iterable
+    public static function dataSub(): iterable
     {
         return [
             ['2020-07-19 20:29:55.000456 Europe/Berlin', 'P1WT-2H5.123S'],

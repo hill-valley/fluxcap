@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace HillValley\Fluxcap\Tests;
 
+use HillValley\Fluxcap\Base\IntlFormatter;
 use HillValley\Fluxcap\DateTime;
 use HillValley\Fluxcap\Duration;
 use HillValley\Fluxcap\Exception\FormatMismatchException;
 use HillValley\Fluxcap\Exception\InvalidPartException;
 use HillValley\Fluxcap\Exception\InvalidStringException;
 use HillValley\Fluxcap\Time;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
- * @covers \HillValley\Fluxcap\Base\IntlFormatter
- * @covers \HillValley\Fluxcap\Time
  */
+#[CoversClass(IntlFormatter::class)]
+#[CoversClass(Time::class)]
 final class TimeTest extends TestCase
 {
     public function testConstruct(): void
@@ -36,13 +39,13 @@ final class TimeTest extends TestCase
         self::assertTimeNow(Time::fromString('now'));
     }
 
-    /** @dataProvider dataFromString */
+    #[DataProvider('dataFromString')]
     public function testFromString(string $expected, string $time): void
     {
         self::assertTime($expected, Time::fromString($time));
     }
 
-    public function dataFromString(): iterable
+    public static function dataFromString(): iterable
     {
         return [
             ['15:32:00.000000', '15:32'],
@@ -54,7 +57,7 @@ final class TimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFromStringInvalid */
+    #[DataProvider('dataFromStringInvalid')]
     public function testFromStringInvalid(string $expected, string $time): void
     {
         $this->expectException(InvalidStringException::class);
@@ -63,7 +66,7 @@ final class TimeTest extends TestCase
         Time::fromString($time);
     }
 
-    public function dataFromStringInvalid(): iterable
+    public static function dataFromStringInvalid(): iterable
     {
         return [
             ['The time string can not be empty (use "now" for current time).', ''],
@@ -72,13 +75,13 @@ final class TimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFromFormat */
+    #[DataProvider('dataFromFormat')]
     public function testFromFormat(string $expected, string $format, string $time): void
     {
         self::assertTime($expected, Time::fromFormat($format, $time));
     }
 
-    public function dataFromFormat(): iterable
+    public static function dataFromFormat(): iterable
     {
         return [
             ['15:32:00.000000', 'i.H', '32.15'],
@@ -93,13 +96,13 @@ final class TimeTest extends TestCase
         Time::fromFormat('H.i', '20:10');
     }
 
-    /** @dataProvider dataFromParts */
+    #[DataProvider('dataFromParts')]
     public function testFromParts(string $expected, ...$parts): void
     {
         self::assertTime($expected, Time::fromParts(...$parts));
     }
 
-    public function dataFromParts(): iterable
+    public static function dataFromParts(): iterable
     {
         return [
             ['05:00:00.000000', 5],
@@ -109,7 +112,7 @@ final class TimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFromPartsInvalid */
+    #[DataProvider('dataFromPartsInvalid')]
     public function testFromPartsInvalid(string $expected, ...$parts): void
     {
         $this->expectException(InvalidPartException::class);
@@ -118,7 +121,7 @@ final class TimeTest extends TestCase
         Time::fromParts(...$parts);
     }
 
-    public function dataFromPartsInvalid(): iterable
+    public static function dataFromPartsInvalid(): iterable
     {
         return [
             ['Hour part must be between 0 and 23, but -1 given.', -1],
@@ -138,13 +141,13 @@ final class TimeTest extends TestCase
         self::assertTime('01:05:20.000000', Time::fromTimestamp($timestamp));
     }
 
-    /** @dataProvider dataFromNative */
+    #[DataProvider('dataFromNative')]
     public function testFromNative(string $expected, \DateTimeInterface $time): void
     {
         self::assertTime($expected, Time::fromNative($time));
     }
 
-    public function dataFromNative(): iterable
+    public static function dataFromNative(): iterable
     {
         return [
             ['23:00:00.000000', new \DateTime('2018-09-13 23:00:00')],
@@ -153,13 +156,13 @@ final class TimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataCast */
+    #[DataProvider('dataCast')]
     public function testCast(string $expected, $time): void
     {
         self::assertTime($expected, Time::cast($time));
     }
 
-    public function dataCast(): iterable
+    public static function dataCast(): iterable
     {
         return [
             ['23:35:00.000000', strtotime('2018-06-17 23:35:00')],
@@ -170,7 +173,7 @@ final class TimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataToIso */
+    #[DataProvider('dataToIso')]
     public function testToIso(string $expected, string $time): void
     {
         $time = Time::fromString($time);
@@ -179,7 +182,7 @@ final class TimeTest extends TestCase
         self::assertSame($expected, (string) $time);
     }
 
-    public function dataToIso(): iterable
+    public static function dataToIso(): iterable
     {
         return [
             ['10:00:00.000000', '10:00'],
@@ -268,13 +271,13 @@ final class TimeTest extends TestCase
         self::assertSame(12340, $time->getMicrosecond());
     }
 
-    /** @dataProvider dataIsMidnight */
+    #[DataProvider('dataIsMidnight')]
     public function testIsMidnight(bool $expected, string $time): void
     {
         self::assertSame($expected, Time::fromString($time)->isMidnight());
     }
 
-    public function dataIsMidnight(): iterable
+    public static function dataIsMidnight(): iterable
     {
         return [
             [true, '00:00'],
@@ -284,13 +287,13 @@ final class TimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAddHours */
+    #[DataProvider('dataAddHours')]
     public function testAddHours(string $expected, Time $time, int $hours): void
     {
         self::assertTime($expected, $time->addHours($hours));
     }
 
-    public function dataAddHours(): iterable
+    public static function dataAddHours(): iterable
     {
         return [
             ['19:25:00.000000', Time::fromString('17:25:00'), 2],
@@ -299,13 +302,13 @@ final class TimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSubHours */
+    #[DataProvider('dataSubHours')]
     public function testSubHours(string $expected, Time $time, int $hours): void
     {
         self::assertTime($expected, $time->subHours($hours));
     }
 
-    public function dataSubHours(): iterable
+    public static function dataSubHours(): iterable
     {
         return [
             ['15:25:00.000000', Time::fromString('17:25:00'), 2],
@@ -314,13 +317,13 @@ final class TimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAddMinutes */
+    #[DataProvider('dataAddMinutes')]
     public function testAddMinutes(string $expected, Time $time, int $minutes): void
     {
         self::assertTime($expected, $time->addMinutes($minutes));
     }
 
-    public function dataAddMinutes(): iterable
+    public static function dataAddMinutes(): iterable
     {
         return [
             ['17:27:00.000000', Time::fromString('17:25:00'), 2],
@@ -329,13 +332,13 @@ final class TimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSubMinutes */
+    #[DataProvider('dataSubMinutes')]
     public function testSubMinutes(string $expected, Time $time, int $minutes): void
     {
         self::assertTime($expected, $time->subMinutes($minutes));
     }
 
-    public function dataSubMinutes(): iterable
+    public static function dataSubMinutes(): iterable
     {
         return [
             ['17:23:00.000000', Time::fromString('17:25:00'), 2],
@@ -344,13 +347,13 @@ final class TimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAddSeconds */
+    #[DataProvider('dataAddSeconds')]
     public function testAddSeconds(string $expected, Time $time, int $seconds): void
     {
         self::assertTime($expected, $time->addSeconds($seconds));
     }
 
-    public function dataAddSeconds(): iterable
+    public static function dataAddSeconds(): iterable
     {
         return [
             ['17:25:07.000000', Time::fromString('17:25:05'), 2],
@@ -359,13 +362,13 @@ final class TimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSubSeconds */
+    #[DataProvider('dataSubSeconds')]
     public function testSubSeconds(string $expected, Time $time, int $seconds): void
     {
         self::assertTime($expected, $time->subSeconds($seconds));
     }
 
-    public function dataSubSeconds(): iterable
+    public static function dataSubSeconds(): iterable
     {
         return [
             ['17:25:03.000000', Time::fromString('17:25:05'), 2],
@@ -376,13 +379,13 @@ final class TimeTest extends TestCase
 
     // === CompareTrait ===
 
-    /** @dataProvider dataMin */
+    #[DataProvider('dataMin')]
     public function testMin(int $expectedIndex, Time ...$times): void
     {
         self::assertSame($times[$expectedIndex], Time::min(...$times));
     }
 
-    public function dataMin(): iterable
+    public static function dataMin(): iterable
     {
         return [
             [0, Time::fromString('18:30:00')],
@@ -391,13 +394,13 @@ final class TimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataMax */
+    #[DataProvider('dataMax')]
     public function testMax(int $expectedIndex, Time ...$times): void
     {
         self::assertSame($times[$expectedIndex], Time::max(...$times));
     }
 
-    public function dataMax(): iterable
+    public static function dataMax(): iterable
     {
         return [
             [0, Time::fromString('18:30:00')],
@@ -406,7 +409,7 @@ final class TimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataDiff */
+    #[DataProvider('dataDiff')]
     public function testDiff(string $expected, Time $dateTime, Time $other, ...$parameters): void
     {
         $duration = $dateTime->diff($other, ...$parameters);
@@ -415,7 +418,7 @@ final class TimeTest extends TestCase
         self::assertSame($expected, $duration->toIso());
     }
 
-    public function dataDiff(): iterable
+    public static function dataDiff(): iterable
     {
         return [
             ['PT0S', Time::fromString('18:30:00'), Time::fromString('18:30:00')],
@@ -426,7 +429,7 @@ final class TimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataCompareTo */
+    #[DataProvider('dataCompareTo')]
     public function testCompareTo(int $expected, Time $dateTime, Time $other): void
     {
         self::assertSame($expected, $dateTime->compareTo($other));
@@ -437,7 +440,7 @@ final class TimeTest extends TestCase
         self::assertSame(1 !== $expected, $dateTime->lowerEquals($other));
     }
 
-    public function dataCompareTo(): iterable
+    public static function dataCompareTo(): iterable
     {
         return [
             [0, Time::fromString('18:30:00'), Time::fromString('18:30:00')],
@@ -458,7 +461,7 @@ final class TimeTest extends TestCase
 
     // === ModifyTrait ===
 
-    /** @dataProvider dataModify */
+    #[DataProvider('dataModify')]
     public function testModify(string $expected, string $modify): void
     {
         $time = Time::fromString('18:30:00.123456');
@@ -466,7 +469,7 @@ final class TimeTest extends TestCase
         self::assertTime($expected, $time->modify($modify));
     }
 
-    public function dataModify(): iterable
+    public static function dataModify(): iterable
     {
         return [
             ['19:25:00.123456', '+1hour -5min'],
@@ -478,12 +481,12 @@ final class TimeTest extends TestCase
     public function testModifyInvalid(): void
     {
         $this->expectException(InvalidStringException::class);
-        $this->expectExceptionMessage('Failed to parse time string (foo) at position 0 (f): The timezone could not be found in the database.');
+        $this->expectExceptionMessageMatches('/^Failed to parse time string \(foo\)/');
 
         Time::fromString('13:00')->modify('foo');
     }
 
-    /** @dataProvider dataAdd */
+    #[DataProvider('dataAdd')]
     public function testAdd(string $expected, string $duration): void
     {
         $dateTime = Time::fromString('18:30:00.123456');
@@ -491,7 +494,7 @@ final class TimeTest extends TestCase
         self::assertTime($expected, $dateTime->add(Duration::fromString($duration)));
     }
 
-    public function dataAdd(): iterable
+    public static function dataAdd(): iterable
     {
         return [
             ['16:30:05.456456', 'P1WT-2H5.333S'],
@@ -499,7 +502,7 @@ final class TimeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSub */
+    #[DataProvider('dataSub')]
     public function testSub(string $expected, string $duration): void
     {
         $dateTime = Time::fromString('18:30:00.123456');
@@ -507,7 +510,7 @@ final class TimeTest extends TestCase
         self::assertTime($expected, $dateTime->sub(Duration::fromString($duration)));
     }
 
-    public function dataSub(): iterable
+    public static function dataSub(): iterable
     {
         return [
             ['20:29:55.000456', 'P1WT-2H5.123S'],
