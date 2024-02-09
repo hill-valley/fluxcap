@@ -62,6 +62,7 @@ final class Duration implements \JsonSerializable, \Stringable
     /**
      * @psalm-pure
      * @psalm-suppress ImpurePropertyAssignment
+     * @psalm-suppress InaccessibleProperty
      */
     public static function fromParts(int $years = 0, int $months = 0, int $weeks = 0, int $days = 0, int $hours = 0, int $minutes = 0, int $seconds = 0, int $microseconds = 0, bool $inverted = false): self
     {
@@ -205,7 +206,6 @@ final class Duration implements \JsonSerializable, \Stringable
 
     public function format(string $format): string
     {
-        /** @psalm-suppress ImpureMethodCall */
         return $this->interval->format($format);
     }
 
@@ -303,6 +303,7 @@ final class Duration implements \JsonSerializable, \Stringable
     private static function fromSinglePart(string $part, int $count): self
     {
         if (1 !== $count) {
+            /** @psalm-suppress ImpureMethodCall */
             return new self(\DateInterval::createFromDateString($count.$part));
         }
 
@@ -313,6 +314,7 @@ final class Duration implements \JsonSerializable, \Stringable
         static $durations = [];
 
         if (!isset($durations[$part])) {
+            /** @psalm-suppress ImpureMethodCall */
             $durations[$part] = new self(\DateInterval::createFromDateString('1'.$part));
         }
 
